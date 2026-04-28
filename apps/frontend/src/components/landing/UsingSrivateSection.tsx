@@ -2,9 +2,9 @@ import { motion } from 'framer-motion';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 
 const steps = [
-  { step: "01", title: "Define", desc: "Create TIP distribution policies for your staff or agents.", points: ["Multi-token splitting", "Flexible logic"] },
-  { step: "02", title: "Plug", desc: "Integrate Srivate SDK into your terminal or agent.", points: ["Zero-config SDK", "Agent-native"] },
-  { step: "03", title: "Stream", desc: "Tips flow atomically and trustlessly on-chain.", points: ["Instant Payouts", "Base L2 Finality"] }
+  { step: "01", title: "Define", desc: "Set trustless splitting rules to guarantee transparent distribution.", points: ["Multi-token splitting", "Immutable logic"] },
+  { step: "02", title: "Plug", desc: "Embed our x402-standard widget to eliminate payment friction.", points: ["Zero-config SDK", "Frictionless UI"] },
+  { step: "03", title: "Stream", desc: "AI reduces decision fatigue, and tips flow atomically on-chain.", points: ["AI Context Engine", "Base L2 Finality"] }
 ];
 
 export function UsingSrivateSection() {

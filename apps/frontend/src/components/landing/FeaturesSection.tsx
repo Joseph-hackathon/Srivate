@@ -6,10 +6,10 @@ import { Button } from '@/components/ui/button';
 import { CodeBlock } from '@/components/ui/CodeBlock';
 
 const features = [
-  { icon: Zap, title: 'Atomic Tipping', desc: 'Trustless micro-payouts for humans and agents.', color: 'primary' },
-  { icon: Cpu, title: 'Agent SDK', desc: 'Native integration for autonomous actors.', color: 'secondary' },
-  { icon: ShieldCheck, title: 'Non-Custodial', desc: 'Zero counterparty risk with on-chain logic.', color: 'primary' },
-  { icon: Database, title: 'Proof Archive', desc: 'Immutable storage via 0G protocol.', color: 'secondary' }
+  { icon: Zap, title: 'x402 Initiation', desc: 'One-click embedded widgets removing all user friction.', color: 'primary' },
+  { icon: Cpu, title: 'AI Intelligence', desc: 'Context-aware engines to eliminate decision fatigue.', color: 'secondary' },
+  { icon: ShieldCheck, title: 'Trustless Split', desc: 'Instant on-chain distribution with zero counterparty risk.', color: 'primary' },
+  { icon: Database, title: 'Auditable Proof', desc: 'Permanent distribution tracking via 0G storage.', color: 'secondary' }
 ];
 
 const developerCode = `const tip = await srivate.payouts.distribute({
@@ -49,7 +49,7 @@ export function FeaturesSection() {
             <span className="text-magenta-gradient">TIP Infrastructure.</span>
           </motion.h2>
           <p className="text-lg text-white/40 max-w-xl font-medium">
-            Srivate provides the atomic layer for high-frequency micro-settlements, turning tipping into a transparent, verifiable service for the agentic economy.
+            Srivate tackles structural friction in modern payments, providing an atomic layer that turns tipping into a transparent, frictionless, and verifiable infrastructure for the agentic economy.
           </p>
         </div>
 

@@ -36,7 +36,7 @@ export function HeroSection() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="text-5xl md:text-7xl xl:text-8xl font-black tracking-tight leading-[1.05] text-white"
               >
-                Atomic settlements <span className="text-magenta-gradient">for AI agents.</span>
+                Trustless tipping <span className="text-magenta-gradient">for the agentic web.</span>
               </motion.h1>
               
                 <motion.p 
@@ -45,8 +45,8 @@ export function HeroSection() {
                 transition={{ duration: 0.8, delay: 0.1 }}
                 className="text-lg md:text-xl text-white/50 font-medium max-w-xl leading-relaxed"
               >
-                The world's first trustless TIP infrastructure for agentic networks. 
-                Experience atomic, non-custodial settlements designed for the next generation of autonomous economies.
+                The world's first x402-standard tipping infrastructure. 
+                Eliminate decision fatigue with AI context engines and ensure 100% auditable, frictionless settlements for workers and agents alike.
               </motion.p>
             </div>
 
@@ -83,13 +83,13 @@ export function HeroSection() {
                </div>
                <div className="w-[1px] h-10 bg-white/5 hidden md:block" />
                <div className="flex flex-col items-start">
-                 <span className="text-2xl font-black text-white/60">0%</span>
-                 <span className="text-[10px] font-bold uppercase tracking-widest">Slippage Rate</span>
+                 <span className="text-2xl font-black text-white/60">100%</span>
+                 <span className="text-[10px] font-bold uppercase tracking-widest">Auditable Trust</span>
                </div>
                <div className="w-[1px] h-10 bg-white/5 hidden md:block" />
                <div className="flex flex-col items-start">
-                 <span className="text-2xl font-black text-white/60">∞</span>
-                 <span className="text-[10px] font-bold uppercase tracking-widest">Agent Scalability</span>
+                 <span className="text-2xl font-black text-white/60">x402</span>
+                 <span className="text-[10px] font-bold uppercase tracking-widest">Micro-Protocol Standard</span>
                </div>
             </motion.div>
           </div>

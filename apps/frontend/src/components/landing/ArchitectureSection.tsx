@@ -2,9 +2,10 @@ import { motion } from 'framer-motion';
 import { Database, Shield, Zap, Cpu, ArrowRight } from 'lucide-react';
 
 const techNodes = [
-  { id: 'agent', title: "Autonomous Agents", icon: Cpu, label: "Intent Trigger", desc: "Agents or terminals generate TIP payout intents." },
-  { id: 'srivate', title: "Srivate Protocol", icon: Shield, label: "Core Protocol", desc: "Settlement engine distributes TIPs atomically." },
-  { id: 'settle', title: "Base / 0G Storage", icon: Database, label: "Execution Layer", desc: "Real-time on-chain settlement & proof archiving." }
+  { id: 'init', title: "x402 Initiation", icon: Zap, label: "Frictionless UX", desc: "Widgets & terminals capture TIP intents seamlessly." },
+  { id: 'ai', title: "AI Intelligence", icon: Cpu, label: "Context Engine", desc: "AI removes decision fatigue by recommending amounts." },
+  { id: 'srivate', title: "Srivate Core", icon: Shield, label: "Trustless Split", desc: "Smart contracts distribute TIPs atomically." },
+  { id: 'settle', title: "Base & 0G", icon: Database, label: "Execution & Trust", desc: "Real-time L2 settlement & immutable proof archiving." }
 ];
 
 export function ArchitectureSection() {
@@ -27,13 +28,13 @@ export function ArchitectureSection() {
         </div>
 
         {/* Linear tech flow (Clean Across Style) */}
-        <div className="relative max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+        <div className="relative w-full mx-auto flex flex-col xl:flex-row items-center justify-between gap-6">
            {techNodes.map((node, i) => (
-             <div key={node.id} className="flex flex-col md:flex-row items-center gap-12 flex-1">
+             <div key={node.id} className="flex flex-col xl:flex-row items-center gap-6 flex-1 w-full">
                 <TechNode node={node} isCore={node.id === 'srivate'} />
                 {i < techNodes.length - 1 && (
-                  <div className="hidden md:flex flex-col items-center gap-2 opacity-20">
-                     <ArrowRight className="w-8 h-8 text-white" />
+                  <div className="hidden xl:flex flex-col items-center gap-2 opacity-20 shrink-0">
+                     <ArrowRight className="w-6 h-6 text-white" />
                   </div>
                 )}
              </div>

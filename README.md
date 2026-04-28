@@ -1,41 +1,47 @@
-# Srivate
+# SRIVATE
 
-**Empowering Decentralized Tipping for the Agentic Web.**
+**The Trustless Tipping Infrastructure for the Agentic Web.**
 
-Srivate is not a payment app or a wallet. 
-It is a **fully modular, on-chain tipping infrastructure** designed for the next generation of autonomous agents and decentralized social ecosystems. 
+Srivate (formerly conceptualized as Weep/Tink) is not just a payment app or a wallet. It is a **fully modular, on-chain tipping infrastructure** designed to solve the structural flaws of the modern digital tipping market and empower the next generation of autonomous agents and decentralized ecosystems.
 
-Built on **Base**, Srivate combines **consumer-facing x402 flows**, **AI-driven decision logic**, and **on-chain programmatic settlement** to turn tipping into an executable, scalable on-chain action.
+Built on **Base**, Srivate combines **consumer-facing x402 flows**, **AI-driven decision logic**, and **on-chain programmatic settlement** to turn tipping into a transparent, scalable, and executable on-chain action.
 
-## Why Srivate
+---
 
-In the traditional web, tipping is a passive, closed-loop action (e.g., clicking a "Tip" button on a social platform). In the agentic web, tipping becomes a **programmable stimulus** that triggers complex autonomous workflows.
+## The Market Problem: Why Focus on Tipping?
 
-Current tipping systems are:
-- **Fragmented**: Siloed within specific apps.
-- **Manual**: Require human signatures for every small action.
-- **Static**: Cannot be used as a trigger for external agents or DeFi logic.
+The transition from physical cash to digital payments has fundamentally shifted tipping culture. However, this transition has introduced severe structural friction:
 
-**Srivate addresses this by redefining tipping as infrastructure, not a button.**
+1. **For Consumers (Friction & Decision Fatigue)**: The traditional "Tip" button is a passive, closed-loop action. Users face decision fatigue over how much to tip and privacy concerns regarding payment data.
+2. **For Service Providers & Workers (Trust & Transparency)**: There is a massive lack of trust. Do the tips actually go to the workers? Current systems are opaque, and settlements are heavily delayed.
+3. **For Businesses (Inefficiency)**: Routing, splitting, and managing taxes for tips is highly complex and manual.
 
-## What Srivate Does
+**Current tipping systems are fragmented, manual, and static.** They cannot be used as a trigger for external agents or DeFi logic. Srivate addresses this by redefining tipping as **infrastructure, not a button.**
 
-Srivate manages the full lifecycle of tipping:
-1. **Identification**: Detects tipping intent through widgets or social social triggers.
-2. **Splitting**: Uses AI and smart contracts to split tips between multiple contributors (e.g., the original creator, the agent developer, and the hosting platform).
-3. **Settlement**: Programmatically settles payouts on-chain via the **Base L2**.
-4. **Execution**: Triggers external agent actions (via KeeperHub) or DeFi swaps (via Uniswap) based on the tip amount.
-5. **Trust**: Archives a permanent proof of distribution on **0G Storage**.
+---
 
-## Core Stack (The Modular Engine)
+## The Srivate Solution
 
-Srivate is designed as a layered infrastructure:
+Srivate manages the full lifecycle of a tip by providing a standardized protocol for micro-value transfers:
 
-- **Application Layer**: Agentic UX and Tipping Widgets.
+1. **Frictionless Initiation**: A one-click embedded widget designed around the **x402 standard**, reducing user friction.
+2. **AI-Driven Intelligence**: An AI engine that recommends optimal tip amounts based on context, eliminating decision fatigue.
+3. **Trustless Splitting**: Uses smart contracts to instantly split tips between multiple contributors (e.g., the original creator, the agent developer, and the hosting platform) with zero manual intervention.
+4. **Verifiable Trust**: Archives a permanent, auditable proof of distribution on **0G Storage**, guaranteeing that the intended recipient received the funds.
+5. **Agentic Execution**: Programmatically triggers external agent actions (via **KeeperHub**) or DeFi swaps (via **Uniswap**) based on the tip event.
+
+---
+
+## Core Stack (The Layered Architecture)
+
+Srivate is designed as a highly modular layered infrastructure:
+
+- **Application Layer (Initiation)**: Agentic UX and Tipping Widgets.
+- **Intelligence Layer**: AI-driven context and amount recommendations.
 - **Execution Layer (KeeperHub)**: Programmatic transaction execution for agents.
 - **Finance Layer (Uniswap)**: Intelligent token distribution and liquidity swaps.
+- **Settlement Layer (Base)**: High-speed, low-cost L2 settlement for atomic payouts.
 - **Trust Layer (0G Storage)**: Decentralized, verifiable proof of distribution.
-- **Settlement Layer (Base)**: High-speed, low-cost L2 settlement.
 
 ---
 
@@ -52,14 +58,14 @@ sequenceDiagram
     participant Storage as 0G Storage
     participant Chain as Base L2
 
-    User->>Widget: Tips 0.01 ETH
+    User->>Widget: Tips 0.01 ETH (1-Click)
     Widget->>Backend: Register Tip Event
     Backend->>Finance: Swap ETH to USDC (if needed)
     Backend->>Keeper: Trigger Automated Split Action
     Keeper->>Chain: Execute Programmatic Payouts
     Chain-->>Backend: TX Success
     Backend->>Storage: Archive Distribution Proof
-    Storage-->>User: Verification Receipt
+    Storage-->>User: Verification Receipt (Auditable Proof)
 ```
 
 ### Modular Splitting Logic
@@ -82,13 +88,12 @@ graph TD
     G --> H[Final Verification]
 ```
 
-## Network Support
-Srivate operates on the **Base** blockchain.
+---
 
 ## Why it matters for Hackathons
-* **Modular**: Easy to plug into any agentic app.
+* **Modular**: Easy to plug into any agentic app or physical point-of-sale interface.
 * **Composable**: Works with Uniswap, KeeperHub, and 0G out of the box.
-* **Developer First**: Srivate is designed as infrastructure-first, UI-second.
+* **Developer First**: Srivate is designed as infrastructure-first, UI-second, offering a robust backend for the future of the tipping economy.
 
 ---
 
