@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Navigation, Star, Car, Wallet, ArrowRight, ShieldCheck, Zap, Database } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Star, ShieldCheck, Zap, Database, ArrowLeft, ChevronDown, CheckCircle2 } from 'lucide-react';
 
 export function UberUseCase() {
   const [mode, setMode] = useState<'rider' | 'driver'>('rider');
-  const [tipState, setTipState] = useState<'idle' | 'processing' | 'success'>('idle');
+  const [tipState, setTipState] = useState<'rating' | 'tipping' | 'processing' | 'success'>('rating');
   const [selectedTip, setSelectedTip] = useState<number | null>(null);
 
   const handleTip = () => {
@@ -15,7 +13,7 @@ export function UberUseCase() {
   };
 
   const resetDemo = () => {
-    setTipState('idle');
+    setTipState('rating');
     setSelectedTip(null);
   };
 
@@ -23,234 +21,206 @@ export function UberUseCase() {
     <section className="py-24 relative overflow-hidden bg-[#0A0A10] border-t border-white/5">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <Badge variant="outline" className="border-primary/20 text-primary bg-primary/5 uppercase font-bold text-[10px] px-3 py-1 mb-6">
-            Real-world Integration
-          </Badge>
           <motion.h2 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight"
           >
-            Seamlessly embeds into <br />
-            <span className="text-magenta-gradient">consumer apps.</span>
+            Mobility Use Case: <span className="text-white">Uber</span>
           </motion.h2>
-          <p className="text-white/40 font-medium text-lg">
-            See how Srivate transforms ride-sharing. Riders tip seamlessly, and drivers receive atomic, 100% trustless payouts via Base L2 without platform delays.
+          <p className="text-white/40 font-medium text-lg mb-10">
+            A native integration into the Uber flow. Riders tip seamlessly, and drivers receive 100% atomic payouts instantly via Base L2.
           </p>
 
-          <div className="flex items-center justify-center gap-4 mt-10">
-            <Button 
+          <div className="flex items-center justify-center gap-2 bg-white/5 p-1.5 rounded-full max-w-fit mx-auto border border-white/10">
+            <button 
               onClick={() => { setMode('rider'); resetDemo(); }}
-              className={`h-12 px-8 rounded-full font-bold transition-all ${mode === 'rider' ? 'bg-white text-black hover:bg-white/90' : 'bg-white/5 text-white/40 hover:text-white'}`}
+              className={`px-6 py-2.5 rounded-full font-bold text-sm transition-all ${mode === 'rider' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}
             >
-              Rider App (User)
-            </Button>
-            <Button 
+              Rider App
+            </button>
+            <button 
               onClick={() => { setMode('driver'); resetDemo(); }}
-              className={`h-12 px-8 rounded-full font-bold transition-all ${mode === 'driver' ? 'bg-white text-black hover:bg-white/90' : 'bg-white/5 text-white/40 hover:text-white'}`}
+              className={`px-6 py-2.5 rounded-full font-bold text-sm transition-all ${mode === 'driver' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}
             >
-              Driver App (Manager)
-            </Button>
+              Driver App
+            </button>
           </div>
         </div>
 
-        <div className="max-w-md mx-auto relative">
+        <div className="max-w-sm mx-auto relative">
           {/* Mobile Phone Mockup */}
           <div className="relative bg-black rounded-[3rem] border-[8px] border-[#1f1f2e] overflow-hidden shadow-2xl aspect-[9/19] flex flex-col">
-            {/* Dynamic Island / Notch area */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-7 bg-[#1f1f2e] rounded-b-3xl z-50" />
+            {/* Dynamic Island */}
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-black rounded-full z-50 flex items-center justify-between px-2">
+               <div className="w-2 h-2 rounded-full bg-green-500/50" />
+               <div className="w-2 h-2 rounded-full bg-white/10" />
+            </div>
 
             <AnimatePresence mode="wait">
               {mode === 'rider' ? (
                 <motion.div 
                   key="rider"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="flex-1 bg-[#F6F6F6] flex flex-col"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex-1 bg-[#F6F6F6] flex flex-col relative"
                 >
-                  {/* Map Header */}
-                  <div className="h-2/5 bg-gray-200 relative overflow-hidden flex flex-col justify-end p-6">
-                    <div className="absolute inset-0 opacity-40 bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=40.7128,-74.0060&zoom=14&size=600x300&maptype=roadmap&style=feature:all|element:labels|visibility:off')] bg-cover bg-center" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#F6F6F6] to-transparent" />
-                    <div className="relative z-10 text-center">
-                       <h3 className="text-3xl font-black text-black">You arrived</h3>
-                       <p className="text-black/50 font-medium">124 Central Park West, NY</p>
-                    </div>
+                  {/* Uber Map Background */}
+                  <div className="absolute inset-0 bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=40.7128,-74.0060&zoom=15&size=600x800&maptype=roadmap&style=element:labels|visibility:off&style=feature:road|element:geometry|color:0xffffff&style=feature:landscape|element:geometry|color:0xeeeeee')] bg-cover bg-center" />
+                  
+                  {/* Header */}
+                  <div className="absolute top-10 left-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md z-10 cursor-pointer border border-gray-100">
+                    <ArrowLeft className="w-5 h-5 text-black" />
                   </div>
 
-                  {/* Rider Content */}
-                  <div className="flex-1 px-6 pb-6 pt-2 flex flex-col">
-                    <div className="bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between mb-4 border border-black/5">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden border border-black/5">
-                          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Driver" className="w-10 h-10" />
-                        </div>
-                        <div>
-                          <p className="font-bold text-black text-sm">Michael D.</p>
-                          <div className="flex items-center text-xs font-bold text-black/40 gap-1">
-                             5.0 <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" /> • Toyota Camry
-                          </div>
-                        </div>
+                  {/* Uber Bottom Sheet */}
+                  <motion.div 
+                    className="absolute bottom-0 left-0 w-full bg-white rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.1)] z-20 flex flex-col pb-8 pt-2 px-5"
+                    initial={{ y: 300 }}
+                    animate={{ y: 0 }}
+                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                  >
+                    <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6" />
+
+                    {tipState === 'rating' && (
+                      <div className="text-center flex flex-col items-center">
+                         <div className="w-16 h-16 bg-gray-100 rounded-full overflow-hidden border-2 border-white shadow-sm -mt-12 mb-3">
+                           <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Michael" alt="Driver" />
+                         </div>
+                         <h3 className="text-2xl font-bold text-black mb-1">How was your ride?</h3>
+                         <p className="text-sm text-gray-500 mb-6">Rate Michael</p>
+                         
+                         <div className="flex gap-2 mb-8">
+                           {[1, 2, 3, 4, 5].map((s) => (
+                             <Star key={s} className="w-10 h-10 text-gray-200" onClick={() => setTipState('tipping')} />
+                           ))}
+                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-[10px] font-bold text-black/40 uppercase">Trip Fare</p>
-                        <p className="font-black text-lg text-black">$24.50</p>
+                    )}
+
+                    {tipState === 'tipping' && (
+                      <div className="text-center">
+                         <h3 className="text-xl font-bold text-black mb-1">Add a tip for Michael</h3>
+                         <p className="text-xs text-gray-500 mb-6 flex items-center justify-center gap-1">
+                           Powered by <Zap className="w-3 h-3 text-primary" /> Srivate (100% direct to driver)
+                         </p>
+
+                         <div className="grid grid-cols-3 gap-3 mb-6">
+                           {[2, 5, 10].map(amt => (
+                             <button
+                               key={amt}
+                               onClick={() => setSelectedTip(amt)}
+                               className={`py-4 rounded-xl border-2 text-lg font-bold transition-all ${selectedTip === amt ? 'border-black bg-black text-white' : 'border-gray-100 bg-white text-black hover:border-gray-200'}`}
+                             >
+                               ${amt}
+                             </button>
+                           ))}
+                         </div>
+
+                         <button 
+                           className="w-full py-4 bg-black disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-lg transition-colors"
+                           disabled={!selectedTip}
+                           onClick={handleTip}
+                         >
+                           Done
+                         </button>
                       </div>
-                    </div>
+                    )}
 
-                    {/* Srivate Embedded Widget */}
-                    <div className="bg-white rounded-2xl p-5 shadow-sm border-2 border-primary/10 flex-1 relative overflow-hidden flex flex-col justify-between">
-                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" />
-                      
-                      {tipState === 'idle' && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-full flex flex-col">
-                          <div className="flex justify-between items-center mb-4">
-                            <h4 className="font-black text-black text-lg">Add a tip</h4>
-                            <div className="flex items-center gap-1.5 px-2 py-1 bg-primary/5 rounded-md text-primary">
-                              <Zap className="w-3 h-3" />
-                              <span className="text-[9px] font-bold uppercase tracking-widest">Srivate x402</span>
-                            </div>
-                          </div>
-                          
-                          <p className="text-xs text-black/50 font-medium mb-4 leading-relaxed">
-                            100% of your tip goes directly to Michael via <span className="font-bold text-blue-600">Base L2</span>. No platform fees.
-                          </p>
+                    {tipState === 'processing' && (
+                      <div className="py-10 text-center flex flex-col items-center">
+                         <div className="w-8 h-8 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-4" />
+                         <p className="text-black font-bold">Processing on Base L2...</p>
+                      </div>
+                    )}
 
-                          <div className="grid grid-cols-3 gap-2 mb-4">
-                            {[15, 20, 25].map(pct => (
-                              <button
-                                key={pct}
-                                onClick={() => setSelectedTip(pct)}
-                                className={`py-3 rounded-xl border text-sm font-bold transition-all ${selectedTip === pct ? 'border-primary bg-primary/5 text-primary' : 'border-black/5 bg-white text-black hover:border-black/20'}`}
-                              >
-                                {pct}%
-                              </button>
-                            ))}
-                          </div>
-
-                          <Button 
-                            className="w-full h-12 bg-black hover:bg-black/80 text-white rounded-xl font-bold mt-auto"
-                            disabled={!selectedTip}
-                            onClick={handleTip}
-                          >
-                            Send Trustless Tip
-                          </Button>
-                        </motion.div>
-                      )}
-
-                      {tipState === 'processing' && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-center text-center">
-                           <div className="w-12 h-12 rounded-full border-2 border-primary/20 border-t-primary animate-spin mb-4" />
-                           <p className="text-black font-bold mb-1">Settling via Base...</p>
-                           <p className="text-[10px] text-black/40 font-bold uppercase">Atomic Distribution</p>
-                        </motion.div>
-                      )}
-
-                      {tipState === 'success' && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex flex-col items-center justify-center text-center">
-                           <div className="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center mb-4">
-                             <ShieldCheck className="w-7 h-7 text-green-600" />
+                    {tipState === 'success' && (
+                      <div className="py-6 text-center flex flex-col items-center">
+                         <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
+                         <h3 className="text-xl font-bold text-black mb-2">Tip Sent!</h3>
+                         <p className="text-sm text-gray-500 mb-6">Michael received 100% of your tip instantly via Srivate.</p>
+                         <div className="bg-gray-50 rounded-xl p-4 w-full text-left">
+                           <div className="flex justify-between mb-2">
+                             <span className="text-xs text-gray-500 font-medium">Tx Hash</span>
+                             <span className="text-xs font-mono text-black font-medium">0x2a9...11b</span>
                            </div>
-                           <h4 className="font-black text-black text-xl mb-1">Tip Sent!</h4>
-                           <p className="text-xs text-black/50 font-medium mb-6">Michael received funds instantly.</p>
-                           
-                           <div className="w-full bg-gray-50 rounded-lg p-3 text-left border border-black/5">
-                             <div className="flex justify-between items-center mb-2">
-                               <span className="text-[10px] font-bold text-black/40 uppercase">Tx Hash</span>
-                               <span className="text-[10px] font-mono text-blue-600">0x8f...3a2b</span>
-                             </div>
-                             <div className="flex justify-between items-center">
-                               <span className="text-[10px] font-bold text-black/40 uppercase">Proof</span>
-                               <span className="text-[10px] font-mono text-primary flex items-center gap-1">0G Storage <Database className="w-3 h-3" /></span>
-                             </div>
+                           <div className="flex justify-between">
+                             <span className="text-xs text-gray-500 font-medium">Verified by</span>
+                             <span className="text-xs font-bold text-black flex items-center gap-1">0G Storage <Database className="w-3 h-3" /></span>
                            </div>
-                        </motion.div>
-                      )}
-                    </div>
-                  </div>
+                         </div>
+                         <button onClick={resetDemo} className="mt-6 text-sm font-bold text-black underline">Close</button>
+                      </div>
+                    )}
+                  </motion.div>
                 </motion.div>
               ) : (
                 <motion.div 
                   key="driver"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="flex-1 bg-black text-white flex flex-col"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex-1 bg-black text-white flex flex-col relative"
                 >
-                  {/* Driver Header */}
-                  <div className="px-6 pt-12 pb-6 bg-[#111]">
-                     <div className="flex items-center justify-between mb-8">
-                       <h3 className="text-xl font-bold">Earnings</h3>
-                       <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
-                         <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Driver" className="w-8 h-8" />
-                       </div>
+                  {/* Uber Driver Dark Map Background */}
+                  <div className="absolute inset-0 bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=40.7128,-74.0060&zoom=14&size=600x800&maptype=roadmap&style=element:geometry|color:0x212121&style=element:labels.icon|visibility:off&style=element:labels.text.fill|color:0x757575&style=element:labels.text.stroke|color:0x212121')] bg-cover bg-center opacity-60" />
+
+                  {/* Header Top Earnings */}
+                  <div className="absolute top-12 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md px-6 py-2 rounded-full border border-white/10 z-10 flex flex-col items-center shadow-2xl">
+                    <span className="text-[10px] text-gray-400 font-bold uppercase mb-0.5">Today</span>
+                    <span className="text-2xl font-bold text-white">$145.50</span>
+                  </div>
+
+                  {/* Online Go Button */}
+                  <div className="absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 z-10">
+                    <div className="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(37,99,235,0.4)] border-4 border-black text-2xl font-bold cursor-pointer">
+                      GO
+                    </div>
+                  </div>
+
+                  {/* Driver Bottom Menu */}
+                  <div className="absolute bottom-0 left-0 w-full h-24 bg-black border-t border-white/10 z-20 flex items-center justify-between px-8 pb-4">
+                     <div className="flex flex-col items-center text-blue-500">
+                        <div className="w-6 h-6 rounded border-2 border-blue-500 flex items-center justify-center mb-1"><span className="w-3 h-3 bg-blue-500 rounded-sm"/></div>
                      </div>
-                     <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-2">Today's Balance</p>
-                     <h2 className="text-5xl font-black tracking-tighter mb-4">$145.50</h2>
-                     <div className="flex items-center gap-2">
-                       <Badge variant="outline" className="border-green-500/20 text-green-400 bg-green-500/10">
-                         + $4.90 from Srivate
-                       </Badge>
+                     <div className="flex flex-col items-center opacity-50">
+                        <div className="w-6 h-6 mb-1 rounded-full border-2 border-white"/>
+                     </div>
+                     <div className="flex flex-col items-center opacity-50">
+                        <div className="w-6 h-1 mb-1 bg-white rounded-full mt-2"/>
+                        <div className="w-6 h-1 bg-white rounded-full mt-1"/>
                      </div>
                   </div>
 
-                  {/* Driver Content */}
-                  <div className="flex-1 p-6 flex flex-col">
-                    <h4 className="font-bold text-lg mb-4">Recent Activity</h4>
-                    
-                    <div className="space-y-3 flex-1 overflow-y-auto pr-2 custom-scrollbar">
-                      <div className="bg-[#111] p-4 rounded-2xl border border-white/5 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-primary" />
-                        <div className="flex justify-between items-start mb-2 pl-2">
-                           <div>
-                             <p className="font-bold text-sm">Trip #8482</p>
-                             <p className="text-[10px] text-white/40 font-medium">Just now • Central Park West</p>
-                           </div>
-                           <p className="font-black text-primary">+$29.40</p>
-                        </div>
-                        <div className="pl-2 pt-3 border-t border-white/5 mt-3 flex justify-between items-center">
-                          <span className="text-[10px] font-bold text-white/30 uppercase">Fare: $24.50</span>
-                          <div className="flex items-center gap-1.5 px-2 py-1 bg-primary/10 rounded text-primary text-[10px] font-bold uppercase">
-                            <Zap className="w-3 h-3" /> Tip: $4.90
-                          </div>
-                        </div>
+                  {/* Srivate Notification Popup */}
+                  <motion.div 
+                    initial={{ y: 150, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 1, type: "spring", damping: 20 }}
+                    className="absolute bottom-28 left-4 right-4 bg-[#111] border border-white/10 rounded-2xl p-4 shadow-2xl z-30"
+                  >
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center shrink-0">
+                         <Zap className="w-5 h-5 text-primary" />
                       </div>
-
-                      <div className="bg-[#111] p-4 rounded-2xl border border-white/5">
-                        <div className="flex justify-between items-start mb-2">
-                           <div>
-                             <p className="font-bold text-sm">Trip #8481</p>
-                             <p className="text-[10px] text-white/40 font-medium">2 hours ago • Brooklyn</p>
-                           </div>
-                           <p className="font-bold text-white">+$18.00</p>
-                        </div>
-                      </div>
-
-                      <div className="bg-[#111] p-4 rounded-2xl border border-white/5">
-                        <div className="flex justify-between items-start mb-2">
-                           <div>
-                             <p className="font-bold text-sm">Trip #8480</p>
-                             <p className="text-[10px] text-white/40 font-medium">4 hours ago • Queens</p>
-                           </div>
-                           <p className="font-bold text-white">+$32.50</p>
-                        </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-white text-base">New Tip Received!</h4>
+                        <p className="text-green-400 font-black text-xl mb-1">+$5.00</p>
+                        <p className="text-xs text-gray-400 font-medium leading-relaxed">
+                          Srivate atomic settlement verified on Base L2. 0% platform fee deducted.
+                        </p>
                       </div>
                     </div>
-
-                    <Button variant="outline" className="w-full h-12 mt-4 bg-white/5 border-white/10 hover:bg-white/10 text-white font-bold rounded-xl" onClick={resetDemo}>
-                      Refresh Wallet
-                    </Button>
-                  </div>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
             
             {/* Mobile Home Bar */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-white/20 rounded-full z-50" />
+            <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-black/20 rounded-full z-50" />
           </div>
         </div>
-
       </div>
     </section>
   );
