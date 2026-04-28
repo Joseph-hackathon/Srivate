@@ -177,28 +177,42 @@ export async function settlePayment(
 
         if (result.success && result.txHash) {
             const txHash = result.txHash;
-            const networkId = result.networkId || getChainConfig().networkString;
+            const networkId = getChainConfig().networkString;
 
-                // record the tip allocations for verifiable records
-                if (transaction.tipAmount > 0) {
-                    recordTipAllocations(transaction.id, transaction.merchantId, transaction.tipAmount);
-                }
-
-                // update the session status
+            // create the transaction record
+            const transaction = getDatabase().transaction(() => {
+                const tx = TransactionRepository.create({
+                    sessionId,
+                    merchantId: session.merchantId,
+                    payerAddress,
+                    recipientAddress: merchant.walletAddress,
+                    billAmount: session.billAmount,
+                    tipAmount: session.tipAmount ?? 0,
+                    totalAmount: session.totalAmount ?? session.billAmount,
+                    currency: session.currency,
+                    txHash,
+                    networkId,
+                    onChainPolicyId: merchant.onChainPolicyId,
+                });
+                TransactionRepository.confirm(tx.id);
                 SessionRepository.updateStatus(sessionId, 'confirmed');
+                return tx;
+            })();
+
+            // record the tip allocations for verifiable records
+            if (transaction.tipAmount > 0) {
+                recordTipAllocations(transaction.id, transaction.merchantId, transaction.tipAmount);
+            }
 
             // ETHGlobal Hook: Intelligent Swaps & Transparency (Side Effects)
             if (session.tipAmount && session.tipAmount > 0) {
-                const transaction = TransactionRepository.findBySessionId(sessionId);
-                if (transaction) {
-                    processHackathonExtensions(transaction.id, session.merchantId, session.tipAmount);
-                }
+                processHackathonExtensions(transaction.id, session.merchantId, session.tipAmount);
             }
 
             return {
                 success: true,
                 txHash: result.txHash,
-                networkId: result.networkId,
+                networkId: networkId,
             }
         } else {
             // payment failed
@@ -305,7 +319,7 @@ export async function simulatePayment(
     const txHash = `0xsimulated${Date.now()}`;
     const networkId = getChainConfig().networkString;
 
-    getDatabase().transaction(() => {
+    const confirmedTx = getDatabase().transaction(() => {
         // create the transaction record
         const transaction = TransactionRepository.create({
             sessionId,
@@ -331,11 +345,13 @@ export async function simulatePayment(
 
         // update the session status
         SessionRepository.updateStatus(sessionId, 'confirmed');
+        
+        return transaction;
     })();
 
     // ETHGlobal Hook
     if (session.tipAmount && session.tipAmount > 0) {
-        processHackathonExtensions(transaction.id, session.merchantId, session.tipAmount);
+        processHackathonExtensions(confirmedTx.id, session.merchantId, session.tipAmount);
     }
 
     return {

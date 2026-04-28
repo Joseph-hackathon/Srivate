@@ -2,7 +2,7 @@
 
 **The Trustless Tipping Infrastructure for the Agentic Web.**
 
-Srivate (formerly conceptualized as Weep/Tink) is not just a payment app or a wallet. It is a **fully modular, on-chain tipping infrastructure** designed to solve the structural flaws of the modern digital tipping market and empower the next generation of autonomous agents and decentralized ecosystems.
+Srivate is not just a payment app or a wallet. It is a **fully modular, on-chain tipping infrastructure** designed to solve the structural flaws of the modern digital tipping market and empower the next generation of autonomous agents and decentralized ecosystems.
 
 Built on **Base**, Srivate combines **consumer-facing x402 flows**, **AI-driven decision logic**, and **on-chain programmatic settlement** to turn tipping into a transparent, scalable, and executable on-chain action.
 
