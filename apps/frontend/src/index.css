@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Srivate - Across Inspired Design System */
+
+@layer base {
+  :root {
+    --background: 240 20% 2%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 20% 5%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 20% 5%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 332 100% 50%; /* Across Magenta #FF0080 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 185 100% 50%; /* Across Cyan #00F5FF */
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 240 20% 10%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 332 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --border: 240 20% 12%;
+    --input: 240 20% 8%;
+    --ring: 332 100% 50%;
+
+    --radius: 0.75rem; /* Across uses tighter, modern radius */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    font-family: 'Inter', sans-serif;
+  }
+
+  body {
+    @apply bg-[#05050A] text-foreground antialiased selection:bg-primary/30;
+    /* Across style subtle background mesh */
+    background-image: 
+      radial-gradient(circle at 80% 0%, hsl(332 100% 50% / 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 20% 100%, hsl(185 100% 50% / 0.05) 0%, transparent 40%);
+    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  .glass-premium {
+    @apply bg-[#0F0F1A]/80 border border-white/5 backdrop-blur-[12px] shadow-xl;
+  }
+
+  .text-magenta-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-primary to-primary/80;
+  }
+
+  .glow-magenta {
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.15);
+  }
+
+  .btn-across {
+    @apply h-12 px-8 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all active:scale-95 shadow-lg shadow-primary/20;
+  }
+
+  /* Compact Across Heading Sizes */
+  .title-xl { @apply text-4xl md:text-7xl font-black tracking-tight leading-[1.1] text-white; }
+  .title-lg { @apply text-3xl md:text-5xl font-extrabold tracking-tight leading-[1.2] text-white; }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #05050A; }
+::-webkit-scrollbar-thumb { background: #1A1A2E; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #FF0080; }

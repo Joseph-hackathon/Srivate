@@ -1,0 +1,191 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "createPolicy",
+      "inputs": [
+        {
+          "name": "name",
+          "type": "string",
+          "internalType": "string"
+        },
+        {
+          "name": "recipients",
+          "type": "address[]",
+          "internalType": "address[]"
+        },
+        {
+          "name": "percentages",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "policyId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getPolicy",
+      "inputs": [
+        {
+          "name": "policyId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "name",
+          "type": "string",
+          "internalType": "string"
+        },
+        {
+          "name": "manager",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "recipients",
+          "type": "address[]",
+          "internalType": "address[]"
+        },
+        {
+          "name": "percentages",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "policies",
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "name",
+          "type": "string",
+          "internalType": "string"
+        },
+        {
+          "name": "manager",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "internalType": "bool"
+        },
+        {
+          "name": "createdAt",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "policyCount",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "togglePolicy",
+      "inputs": [
+        {
+          "name": "policyId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "PolicyCreated",
+      "inputs": [
+        {
+          "name": "policyId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        },
+        {
+          "name": "manager",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PolicyStatusChanged",
+      "inputs": [
+        {
+          "name": "policyId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "InvalidParameters",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "PolicyNotFound",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "Unauthorized",
+      "inputs": []
+    }
+  ]
+}

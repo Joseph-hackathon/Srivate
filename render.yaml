@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: srivate-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: DATABASE_PATH
+        value: /var/data/srivate.db
+      - key: NODE_ENV
+        value: production
+    disk:
+      name: srivate-sqlite-data
+      mountPath: /var/data
+      sizeGB: 1
