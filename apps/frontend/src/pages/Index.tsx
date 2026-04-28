@@ -12,10 +12,10 @@ const Index = () => {
     <Layout>
       <div className="bg-space-gradient min-h-screen">
         <HeroSection />
+        <FeaturesSection />
         <UberUseCase />
         <AgodaUseCase />
         <ArchitectureSection />
-        <FeaturesSection />
         <UsingSrivateSection />
       </div>
     </Layout>
