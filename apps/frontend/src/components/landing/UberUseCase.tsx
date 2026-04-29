@@ -225,6 +225,7 @@ export function UberUseCase() {
             <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-black/20 rounded-full z-50" />
           </div>
         </div>
+        </div>
       </div>
     </section>
   );
