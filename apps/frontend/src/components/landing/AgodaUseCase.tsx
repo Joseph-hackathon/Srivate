@@ -19,32 +19,13 @@ export function AgodaUseCase() {
   return (
     <section className="py-24 relative overflow-hidden bg-[#0A0A10] border-t border-white/5">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.h2 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight"
-          >
-            Hospitality Use Case: <span className="text-[#5392F9]">Agoda</span>
-          </motion.h2>
-          <p className="text-white/40 font-medium text-lg mb-10">
-            A native integration into hotel booking apps. Guests can tip housekeeping staff directly. Srivate ensures trustless distribution, completely bypassing hotel management.
-          </p>
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-          <div className="flex items-center justify-center gap-2 bg-white/5 p-1.5 rounded-full max-w-fit mx-auto border border-white/10">
-            <button 
-              onClick={resetDemo}
-              className="px-6 py-2.5 rounded-full font-bold text-sm bg-white text-black transition-all"
-            >
-              Guest App (Review Flow)
-            </button>
-          </div>
-        </div>
-
-        <div className="max-w-sm mx-auto relative">
-          {/* Mobile Phone Mockup */}
-          <div className="relative bg-white rounded-[3rem] border-[8px] border-[#1f1f2e] overflow-hidden shadow-2xl aspect-[9/19] flex flex-col">
-            {/* Dynamic Island */}
+          {/* Mobile Mockup (Left) */}
+          <div className="max-w-sm mx-auto w-full relative lg:order-1 order-2">
+            {/* Mobile Phone Mockup */}
+            <div className="relative bg-white rounded-[3rem] border-[8px] border-[#1f1f2e] overflow-hidden shadow-2xl aspect-[9/19] flex flex-col">
+              {/* Dynamic Island */}
             <div className="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-black rounded-full z-50 flex items-center justify-between px-2">
                <div className="w-2 h-2 rounded-full bg-green-500/50" />
                <div className="w-2 h-2 rounded-full bg-white/10" />
@@ -187,6 +168,31 @@ export function AgodaUseCase() {
             {/* Mobile Home Bar */}
             <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-black/20 rounded-full z-50" />
           </div>
+        </div>
+
+        {/* Text Content (Right) */}
+        <div className="text-left lg:order-2 order-1 lg:pl-12">
+          <motion.h2 
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight"
+          >
+            Hospitality Use Case: <span className="text-[#5392F9]">Agoda</span>
+          </motion.h2>
+          <p className="text-white/40 font-medium text-lg mb-10 max-w-lg">
+            A native integration into hotel booking apps. Guests can tip housekeeping staff directly. Srivate ensures trustless distribution, completely bypassing hotel management.
+          </p>
+
+          <div className="flex items-center gap-2 bg-white/5 p-1.5 rounded-full max-w-fit border border-white/10">
+            <button 
+              onClick={resetDemo}
+              className="px-6 py-2.5 rounded-full font-bold text-sm bg-white text-black transition-all"
+            >
+              Guest App (Review Flow)
+            </button>
+          </div>
+        </div>
+
         </div>
       </div>
     </section>

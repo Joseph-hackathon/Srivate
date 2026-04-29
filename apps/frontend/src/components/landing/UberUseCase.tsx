@@ -20,35 +20,39 @@ export function UberUseCase() {
   return (
     <section className="py-24 relative overflow-hidden bg-[#0A0A10] border-t border-white/5">
       <div className="container mx-auto px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.h2 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight"
-          >
-            Mobility Use Case: <span className="text-white">Uber</span>
-          </motion.h2>
-          <p className="text-white/40 font-medium text-lg mb-10">
-            A native integration into the Uber flow. Riders tip seamlessly, and drivers receive 100% atomic payouts instantly via Base L2.
-          </p>
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          
+          {/* Text Content (Left) */}
+          <div className="text-left">
+            <motion.h2 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight"
+            >
+              Mobility Use Case: <span className="text-white">Uber</span>
+            </motion.h2>
+            <p className="text-white/40 font-medium text-lg mb-10 max-w-lg">
+              A native integration into the Uber flow. Riders tip seamlessly, and drivers receive 100% atomic payouts instantly via Base L2.
+            </p>
 
-          <div className="flex items-center justify-center gap-2 bg-white/5 p-1.5 rounded-full max-w-fit mx-auto border border-white/10">
-            <button 
-              onClick={() => { setMode('rider'); resetDemo(); }}
-              className={`px-6 py-2.5 rounded-full font-bold text-sm transition-all ${mode === 'rider' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}
-            >
-              Rider App
-            </button>
-            <button 
-              onClick={() => { setMode('driver'); resetDemo(); }}
-              className={`px-6 py-2.5 rounded-full font-bold text-sm transition-all ${mode === 'driver' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}
-            >
-              Driver App
-            </button>
+            <div className="flex items-center gap-2 bg-white/5 p-1.5 rounded-full max-w-fit border border-white/10">
+              <button 
+                onClick={() => { setMode('rider'); resetDemo(); }}
+                className={`px-6 py-2.5 rounded-full font-bold text-sm transition-all ${mode === 'rider' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}
+              >
+                Rider App
+              </button>
+              <button 
+                onClick={() => { setMode('driver'); resetDemo(); }}
+                className={`px-6 py-2.5 rounded-full font-bold text-sm transition-all ${mode === 'driver' ? 'bg-white text-black' : 'text-white/40 hover:text-white'}`}
+              >
+                Driver App
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div className="max-w-sm mx-auto relative">
+          {/* Mobile Mockup (Right) */}
+          <div className="max-w-sm mx-auto w-full relative">
           {/* Mobile Phone Mockup */}
           <div className="relative bg-black rounded-[3rem] border-[8px] border-[#1f1f2e] overflow-hidden shadow-2xl aspect-[9/19] flex flex-col">
             {/* Dynamic Island */}
