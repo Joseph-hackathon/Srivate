@@ -39,14 +39,14 @@ export function HeroSection() {
                 Trustless tipping <span className="text-magenta-gradient">for the agentic web.</span>
               </motion.h1>
               
-                <motion.p 
+              <motion.p 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-lg md:text-xl text-white/50 font-medium max-w-xl leading-relaxed"
+                className="text-lg md:text-xl text-white/50 font-medium max-w-lg leading-relaxed"
               >
-                The world's first x402-standard tipping infrastructure. 
-                Eliminate decision fatigue with AI context engines and ensure 100% auditable, frictionless settlements for workers and agents alike.
+                The first x402-standard tipping infrastructure. 
+                Frictionless, AI-driven, and 100% auditable settlements on Base L2.
               </motion.p>
             </div>
 
