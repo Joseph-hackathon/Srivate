@@ -298,7 +298,8 @@ export function generatePaymentUrl(sessionId: string, baseUrl: string): string {
  */
 export async function simulatePayment(
     sessionId: string,
-    payerAddress: string = "0x000000000000000000000000000000000000dEaD"
+    payerAddress: string = "0x000000000000000000000000000000000000dEaD",
+    targetEmployeeId?: string
 ): Promise<SettlePaymentResponse> {
     const session = SessionRepository.findById(sessionId);
 
@@ -340,7 +341,7 @@ export async function simulatePayment(
 
         // record the tip allocations for verifiable records
         if (transaction.tipAmount > 0) {
-            recordTipAllocations(transaction.id, transaction.merchantId, transaction.tipAmount);
+            recordTipAllocations(transaction.id, transaction.merchantId, transaction.tipAmount, targetEmployeeId);
         }
 
         // update the session status

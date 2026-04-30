@@ -577,7 +577,7 @@ router.get("/config", (_request, response) => {
 
 router.post("/simulate", async (request, response) => {
     try {
-        const { sessionId, payerAddress } = request.body;
+        const { sessionId, payerAddress, employeeId } = request.body;
         if (!sessionId) {
             return response.status(400).json({
                 success: false,
@@ -585,7 +585,7 @@ router.post("/simulate", async (request, response) => {
             } as ApiResponse<null>);
         }
 
-        const result = await simulatePayment(sessionId, payerAddress);
+        const result = await simulatePayment(sessionId, payerAddress, employeeId);
 
         return response.json({
             success: true,

@@ -60,28 +60,43 @@ export function calculateTipSplit(
     });
 }
 
-/**
- * Records the tip allocations for a confirmed transaction in the database. (Synchronous)
- */
 export function recordTipAllocations(
     transactionId: string,
     merchantId: string,
-    tipAmount: number
+    tipAmount: number,
+    targetEmployeeId?: string
 ): void {
     const merchant = MerchantRepository.findById(merchantId);
-    const splitConfig = TipSplitRepository.getByMerchantId(merchantId);
-    const calculations = calculateTipSplit(tipAmount, splitConfig.splits);
+    let allocations;
 
-    const allocations = calculations.map(calc => ({
-        transactionId,
-        merchantId,
-        employeeId: calc.employeeId,
-        recipientName: calc.name,
-        recipientWallet: calc.walletAddress || merchant?.walletAddress || '0x0000000000000000000000000000000000000000',
-        amount: calc.amount,
-        percentage: calc.percentage,
-        status: 'pending' as const
-    }));
+    if (targetEmployeeId) {
+        // ETHGlobal Hackathon Demo: Target 100% tip to the selected employee
+        allocations = [{
+            transactionId,
+            merchantId,
+            employeeId: targetEmployeeId,
+            recipientName: "Selected Operator", // Will be shown in dashboard
+            recipientWallet: merchant?.walletAddress || '0x0000000000000000000000000000000000000000',
+            amount: tipAmount,
+            percentage: 100,
+            status: 'pending' as const
+        }];
+    } else {
+        // Standard Protocol: Split based on merchant config
+        const splitConfig = TipSplitRepository.getByMerchantId(merchantId);
+        const calculations = calculateTipSplit(tipAmount, splitConfig.splits);
+
+        allocations = calculations.map(calc => ({
+            transactionId,
+            merchantId,
+            employeeId: calc.employeeId,
+            recipientName: calc.name,
+            recipientWallet: calc.walletAddress || merchant?.walletAddress || '0x0000000000000000000000000000000000000000',
+            amount: calc.amount,
+            percentage: calc.percentage,
+            status: 'pending' as const
+        }));
+    }
 
     TipAllocationRepository.createMany(allocations);
 }

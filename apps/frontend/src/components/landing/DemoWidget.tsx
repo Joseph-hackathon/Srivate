@@ -9,6 +9,7 @@ import { useAccount } from "wagmi";
 import { toast } from 'sonner';
 import { useCreateTip, usePolicyCount, useCreatePolicy } from '@/hooks/useSrivateContracts';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useMerchantStaffStats } from '@/hooks/useSrivateApi';
 
 const tipAmounts = [
   { value: 15, label: '15%' },
@@ -21,10 +22,14 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
   const [step, setStep] = useState<'bill' | 'tip' | 'success'>('bill');
   const [billAmount, setBillAmount] = useState<string>('24.50');
   const [selectedTip, setSelectedTip] = useState<number | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const { address: accountAddress } = useAccount();
   const account = accountAddress ? { address: accountAddress } : null;
+
+  // Fetch staff for the demo
+  const { data: staffData } = useMerchantStaffStats('demo-cafe');
 
   const handleNext = async () => {
     if (!billAmount || parseFloat(billAmount) <= 0) return;
@@ -117,17 +122,29 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
 
   // Effect to handle transaction success
   useEffect(() => {
-    if (isTxSuccess && step === 'tip') {
-      setStep('success');
-      toast.success("Settlement successful on Base Sepolia!");
+    if (isTxSuccess && step === 'tip' && sessionId) {
+      // Once on-chain TX is successful, notify backend to update dashboard immediately
+      api.post('/payments/simulate', {
+        sessionId,
+        payerAddress: account?.address || "0x000000000000000000000000000000000000dEaD",
+        employeeId: selectedEmployee // Direct 100% tip to this employee
+      }).then(() => {
+        setStep('success');
+        toast.success("Settlement successful on Base Sepolia!");
+      }).catch(err => {
+        console.error("Backend confirm error:", err);
+        setStep('success'); // proceed anyway since on-chain succeeded
+        toast.success("Settlement successful on Base Sepolia!");
+      });
     }
-  }, [isTxSuccess, step]);
+  }, [isTxSuccess, step, sessionId, account?.address, selectedEmployee]);
 
   const isLoading = isProcessing || isTxPending;
 
   const resetDemo = () => {
     setStep('bill');
     setSelectedTip(null);
+    setSelectedEmployee(null);
     setBillAmount('24.50');
     setSessionId(null);
   };
@@ -211,6 +228,38 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
                     <Sparkles className="h-3.5 w-3.5 text-primary" />
                     <span className="text-[9px] font-bold text-primary uppercase tracking-widest">AI Distribution Active</span>
                   </div>
+                </div>
+
+                {/* Operator Selection */}
+                <div className="space-y-3">
+                   <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest block mb-2">Direct Tip (Optional)</span>
+                   <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                     <button
+                        onClick={() => setSelectedEmployee(null)}
+                        className={cn(
+                          "whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-colors border",
+                          selectedEmployee === null
+                            ? "bg-primary/20 border-primary text-primary"
+                            : "bg-white/[0.02] border-white/5 text-white/40 hover:border-white/10 hover:text-white"
+                        )}
+                     >
+                       All Staff (Protocol Split)
+                     </button>
+                     {staffData?.map((staff) => (
+                        <button
+                          key={staff.id}
+                          onClick={() => setSelectedEmployee(staff.id)}
+                          className={cn(
+                            "whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-colors border",
+                            selectedEmployee === staff.id
+                              ? "bg-primary/20 border-primary text-primary"
+                              : "bg-white/[0.02] border-white/5 text-white/40 hover:border-white/10 hover:text-white"
+                          )}
+                        >
+                          {staff.name}
+                        </button>
+                     ))}
+                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
