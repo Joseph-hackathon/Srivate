@@ -43,7 +43,7 @@ export function UberUseCase() {
 
     try {
       const { data } = await api.post('/sessions', {
-        merchantSlug: DEMO_MERCHANT_SLUG,
+        merchantId: DEMO_MERCHANT_SLUG,
         billAmount: 20.00,
         currency: 'USDC'
       });

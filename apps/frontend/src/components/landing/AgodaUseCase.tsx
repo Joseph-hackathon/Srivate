@@ -42,7 +42,7 @@ export function AgodaUseCase() {
 
     try {
       const { data } = await api.post('/sessions', {
-        merchantSlug: DEMO_MERCHANT_SLUG,
+        merchantId: DEMO_MERCHANT_SLUG,
         billAmount: 150.00,
         currency: 'USDC'
       });
