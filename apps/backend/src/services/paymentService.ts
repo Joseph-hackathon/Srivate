@@ -299,7 +299,8 @@ export function generatePaymentUrl(sessionId: string, baseUrl: string): string {
 export async function simulatePayment(
     sessionId: string,
     payerAddress: string = "0x000000000000000000000000000000000000dEaD",
-    targetEmployeeId?: string
+    targetEmployeeId?: string,
+    providedTxHash?: string
 ): Promise<SettlePaymentResponse> {
     const session = SessionRepository.findById(sessionId);
 
@@ -316,8 +317,8 @@ export async function simulatePayment(
         return { success: false, error: "Merchant not found" };
     }
 
-    // Simulate Tx Hash
-    const txHash = `0xsimulated${Date.now()}`;
+    // Use provided Tx Hash from frontend or simulate one
+    const txHash = providedTxHash || `0xsimulated${Date.now()}`;
     const networkId = getChainConfig().networkString;
 
     const confirmedTx = getDatabase().transaction(() => {

@@ -127,7 +127,8 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
       api.post('/payments/simulate', {
         sessionId,
         payerAddress: account?.address || "0x000000000000000000000000000000000000dEaD",
-        employeeId: selectedEmployee // Direct 100% tip to this employee
+        employeeId: selectedEmployee, // Direct 100% tip to this employee
+        txHash: txHash
       }).then(() => {
         setStep('success');
         toast.success("Settlement successful on Base Sepolia!");

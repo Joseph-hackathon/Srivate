@@ -799,6 +799,21 @@ router.post("/:id/payout", async (request, response) => {
 // ... (previous routes)
 
 /**
+ * @route POST /api/merchants/:id/employees/:employeeId/claim
+ * @desc Mark all pending tips as claimed for an employee after on-chain success
+ */
+router.post("/:id/employees/:employeeId/claim", (request, response) => {
+    try {
+        const { employeeId } = request.params;
+        TipAllocationRepository.markDistributed(employeeId);
+        return response.json({ success: true });
+    } catch (error) {
+        console.error("Error marking tips as claimed:", error);
+        return response.status(500).json({ success: false, error: "Failed to claim tips" });
+    }
+});
+
+/**
  * @route GET /api/merchants/:id/employees/:employeeId/payouts
  * @desc Get payout history for a specific employee
  */

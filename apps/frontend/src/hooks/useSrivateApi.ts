@@ -92,22 +92,34 @@ export const useMerchantStaffStats = (idOrSlug: string) => {
     });
 };
 
-export const usePayoutEmployee = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: async ({ merchantSlug, employeeId, amount }: { merchantSlug: string, employeeId: string, amount: number }) => {
-            const { data } = await api.post<{ success: boolean; data: any }>(`/merchants/${merchantSlug}/payout`, {
-                employeeId,
-                amount
-            });
-            return data;
-        },
-        onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: ['merchant', variables.merchantSlug, 'staff-stats'] });
-            queryClient.invalidateQueries({ queryKey: ['merchant', variables.merchantSlug, 'stats'] });
-        },
-    });
-};
+export function usePayoutEmployee() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ merchantSlug, employeeId, amount }: { merchantSlug: string, employeeId: string, amount: number }) => {
+      const response = await api.post(`/merchants/${merchantSlug}/payout`, { employeeId, amount });
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['merchant-stats', variables.merchantSlug] });
+      queryClient.invalidateQueries({ queryKey: ['merchant-staff', variables.merchantSlug] });
+    }
+  });
+}
+
+export function useClaimEmployeeFunds() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ merchantSlug, employeeId }: { merchantSlug: string, employeeId: string }) => {
+      const response = await api.post(`/merchants/${merchantSlug}/employees/${employeeId}/claim`);
+      return response.data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['merchant', variables.merchantSlug, 'staff-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['merchant', variables.merchantSlug, 'employee', variables.employeeId, 'payouts'] });
+      queryClient.invalidateQueries({ queryKey: ['merchant', variables.merchantSlug, 'stats'] });
+    }
+  });
+}
 
 export const useAddStaff = () => {
     const queryClient = useQueryClient();

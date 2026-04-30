@@ -35,59 +35,9 @@ import {
 } from '@/components/ui/dialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useRecentTips } from '@/hooks/useSrivateApi';
 
-// Mock disputes data
-const disputesData = [
-  {
-    id: 'DSP-001',
-    title: 'Tip not received',
-    description: 'Customer claims tip was sent but merchant did not receive it.',
-    amount: 15.00,
-    currency: 'USDC',
-    status: 'open',
-    createdAt: '2024-01-15',
-    from: '0x1234...5678',
-    to: '0xabcd...efgh',
-    txHash: '0x9876...5432',
-    messages: [
-      { from: 'customer', message: 'I sent a $15 tip but the merchant says they didnt receive it.', time: '2024-01-15 10:30' },
-      { from: 'support', message: 'Were investigating this issue. Please provide the transaction hash.', time: '2024-01-15 11:00' },
-    ],
-  },
-  {
-    id: 'DSP-002',
-    title: 'Wrong amount charged',
-    description: 'Tip amount was higher than what the customer intended.',
-    amount: 50.00,
-    currency: 'USDC',
-    status: 'pending',
-    createdAt: '2024-01-14',
-    from: '0xfedc...ba98',
-    to: '0x1122...3344',
-    txHash: '0xaaaa...bbbb',
-    messages: [
-      { from: 'customer', message: 'I meant to tip $5 but $50 was charged.', time: '2024-01-14 15:20' },
-    ],
-  },
-  {
-    id: 'DSP-003',
-    title: 'Duplicate transaction',
-    description: 'Customer was charged twice for the same tip.',
-    amount: 10.00,
-    currency: 'AVAX',
-    status: 'resolved',
-    createdAt: '2024-01-13',
-    from: '0x5555...6666',
-    to: '0x7777...8888',
-    txHash: '0xcccc...dddd',
-    resolution: 'Refund issued to customer wallet.',
-    messages: [
-      { from: 'customer', message: 'I was charged twice for a $10 tip.', time: '2024-01-13 09:00' },
-      { from: 'support', message: 'We found the duplicate charge. Processing refund now.', time: '2024-01-13 10:30' },
-      { from: 'support', message: 'Refund has been issued. Please check your wallet.', time: '2024-01-13 11:00' },
-    ],
-  },
-];
+// Removed static mock data
 
 const statusConfig = {
   open: { label: 'Open_Ticket', color: 'text-primary bg-primary/10 border-primary/20', icon: AlertTriangle, glow: 'glow-magenta' },
@@ -98,9 +48,32 @@ const statusConfig = {
 export default function Disputes() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedDispute, setSelectedDispute] = useState<typeof disputesData[0] | null>(null);
+  const [selectedDispute, setSelectedDispute] = useState<any>(null);
 
-  const filteredDisputes = disputesData.filter((dispute) => {
+  const DEMO_MERCHANT_SLUG = 'demo-cafe';
+  const { data: recentTips, isLoading } = useRecentTips(DEMO_MERCHANT_SLUG, 50);
+
+  const dynamicDisputes = recentTips ? recentTips.map(tip => ({
+    id: `DSP-${tip.id.slice(0, 6)}`,
+    title: `Settlement #${tip.id.slice(0, 4)}`,
+    description: tip.status === 'failed' 
+        ? 'Transaction failed during processing or was reverted on-chain.' 
+        : tip.status === 'pending'
+        ? 'Transaction is currently awaiting confirmation.'
+        : 'Transaction processed and settled successfully on Base Sepolia.',
+    amount: tip.totalAmount,
+    currency: 'USDC',
+    status: tip.status === 'failed' ? 'open' : (tip.status === 'pending' ? 'pending' : 'resolved'),
+    createdAt: new Date(tip.createdAt).toLocaleString(),
+    from: 'Srivate User',
+    to: 'Srivate Demo Cafe',
+    txHash: tip.txHash || '-',
+    messages: tip.status === 'failed' ? [
+        { from: 'system', message: 'Smart contract reverted the transaction.', time: new Date().toLocaleString() }
+    ] : [],
+  })) : [];
+
+  const filteredDisputes = dynamicDisputes.filter((dispute) => {
     const matchesStatus = statusFilter === 'all' || dispute.status === statusFilter;
     const matchesSearch = 
       dispute.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -109,10 +82,10 @@ export default function Disputes() {
   });
 
   const stats = {
-    total: disputesData.length,
-    open: disputesData.filter(d => d.status === 'open').length,
-    pending: disputesData.filter(d => d.status === 'pending').length,
-    resolved: disputesData.filter(d => d.status === 'resolved').length,
+    total: dynamicDisputes.length,
+    open: dynamicDisputes.filter(d => d.status === 'open').length,
+    pending: dynamicDisputes.filter(d => d.status === 'pending').length,
+    resolved: dynamicDisputes.filter(d => d.status === 'resolved').length,
   };
 
   return (
@@ -201,7 +174,12 @@ export default function Disputes() {
 
           {/* Disputes List */}
           <div className="space-y-6">
-            {filteredDisputes.length === 0 ? (
+            {isLoading ? (
+              <div className="glass-premium rounded-3xl p-20 text-center border-white/5">
+                <ShieldAlert className="h-16 w-16 text-primary/20 mx-auto mb-6 animate-pulse" />
+                <h3 className="text-2xl font-bold text-white mb-2 italic tracking-tighter uppercase">Synchronizing_Ledger...</h3>
+              </div>
+            ) : filteredDisputes.length === 0 ? (
               <div className="glass-premium rounded-3xl p-20 text-center border-white/5">
                 <ShieldAlert className="h-16 w-16 text-primary/20 mx-auto mb-6 animate-pulse" />
                 <h3 className="text-2xl font-bold text-white mb-2 italic tracking-tighter uppercase">No_Cases_Detected.</h3>

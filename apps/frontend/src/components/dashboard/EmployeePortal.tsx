@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Wallet, CheckCircle2, Clock, AlertTriangle, Cpu, TrendingUp } from 'lucide-react';
-import { useMerchantStaffStats, useEmployeePayouts } from '@/hooks/useSrivateApi';
+import { useMerchantStaffStats, useEmployeePayouts, useClaimEmployeeFunds } from '@/hooks/useSrivateApi';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useClaim } from '@/hooks/useSrivateContracts';
@@ -86,9 +86,13 @@ export function EmployeePortal({ walletAddress }: EmployeePortalProps) {
   }
 
   const { claim, isPending: isClaimPending, isSuccess: isClaimSuccess, hash: txHash } = useClaim();
+  const claimBackendMutation = useClaimEmployeeFunds();
 
   useEffect(() => {
     if (isClaimSuccess && txHash) {
+      if (currentEmployee) {
+        claimBackendMutation.mutate({ merchantSlug: DEMO_MERCHANT_SLUG, employeeId: currentEmployee.id });
+      }
       toast.success("Funds successfully claimed on Base Sepolia!", {
         description: "View the atomic payout proof on explorer.",
         action: {
@@ -186,7 +190,7 @@ export function EmployeePortal({ walletAddress }: EmployeePortalProps) {
               </span>
               <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-lg border border-white/5">
                  <CheckCircle2 className="w-3 h-3 text-secondary" />
-                 <span className="text-[9px] font-bold text-white/40 uppercase tracking-widest">Total_Distributed</span>
+                 <span className="text-[9px] font-bold text-white/40 uppercase tracking-widest">{payouts?.filter(p => p.status !== 'pending').length || 0} Cycles_Complete</span>
               </div>
             </div>
           </div>
