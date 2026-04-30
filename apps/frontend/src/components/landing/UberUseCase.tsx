@@ -47,7 +47,7 @@ export function UberUseCase() {
         billAmount: 20.00,
         currency: 'USDC'
       });
-      const newSessionId = data.data.id;
+      const newSessionId = data.data.session.id;
       setSessionId(newSessionId);
 
       await api.patch(`/sessions/${newSessionId}/tip`, {
