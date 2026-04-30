@@ -4,7 +4,7 @@ import { Star, ShieldCheck, Zap, Database, ArrowLeft, ChevronDown, CheckCircle2,
 import { useMerchantStaffStats } from '@/hooks/useSrivateApi';
 import { useCreateTip } from '@/hooks/useSrivateContracts';
 import { useAccount } from 'wagmi';
-import { api } from '@/lib/axios';
+import api from '@/lib/api';
 import { toast } from 'sonner';
 import { ProtocolExecutionFlow } from './ProtocolExecutionFlow';
 
