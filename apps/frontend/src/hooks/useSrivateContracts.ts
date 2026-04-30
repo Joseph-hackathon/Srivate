@@ -1,12 +1,13 @@
-
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { parseEther } from "viem";
 import DistributionPolicyRegistryABI from '../abis/DistributionPolicyRegistry.json';
 import TipDistributorABI from '../abis/TipDistributor.json';
 
-// Hardcoded for reliable Hackathon demo (Base Sepolia)
-const REGISTRY_ADDRESS = (import.meta.env.VITE_REGISTRY_ADDRESS || "0x81AeC0B87CAa631365B0AC0B628A84afdf6f1Fe9") as `0x${string}`;
-const DISTRIBUTOR_ADDRESS = (import.meta.env.VITE_DISTRIBUTOR_ADDRESS || "0xA9Eaf8E76966b60e9aB63C74a42605E84adF9EcE") as `0x${string}`;
+// --- HARDCODED ADDRESSES FOR HACKATHON DEMO (CRONOS TESTNET) ---
+// Registry: 0x7b4bcf6ba16b15bd3eca2c920f52d1447970c227
+// Distributor: 0x6f6325f4f68ade3faf5b27d8ee20e2fbb0ddc23e
+const REGISTRY_ADDRESS = (import.meta.env.VITE_REGISTRY_ADDRESS || "0x7b4bcf6ba16b15bd3eca2c920f52d1447970c227") as `0x${string}`;
+const DISTRIBUTOR_ADDRESS = (import.meta.env.VITE_DISTRIBUTOR_ADDRESS || "0x6f6325f4f68ade3faf5b27d8ee20e2fbb0ddc23e") as `0x${string}`;
 
 export function useTipCount() {
     return useReadContract({

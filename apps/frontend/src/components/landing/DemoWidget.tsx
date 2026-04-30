@@ -130,11 +130,11 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
         employeeId: selectedEmployee // Direct 100% tip to this employee
       }).then(() => {
         setStep('success');
-        toast.success("Settlement successful on Base Sepolia!");
+        toast.success("Settlement successful on Cronos Testnet!");
       }).catch(err => {
         console.error("Backend confirm error:", err);
         setStep('success'); // proceed anyway since on-chain succeeded
-        toast.success("Settlement successful on Base Sepolia!");
+        toast.success("Settlement successful on Cronos Testnet!");
       });
     }
   }, [isTxSuccess, step, sessionId, account?.address, selectedEmployee]);
@@ -330,11 +330,11 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">Settlement Successful</h3>
                 <p className="text-base text-white/30 font-medium mb-6 max-w-xs">
-                  The protocol has distributed USDC via Base L2.
+                  The protocol has distributed USDC via Cronos Testnet.
                 </p>
                 {isTxSuccess && txHash && (
                   <a 
-                    href={`https://sepolia.basescan.org/tx/${txHash}`} 
+                    href={`https://explorer.cronos.org/testnet/tx/${txHash}`} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-bold uppercase tracking-widest text-[10px] mb-10 bg-primary/5 px-4 py-2 rounded-lg border border-primary/20"
