@@ -4,9 +4,9 @@ import { parseEther } from "viem";
 import DistributionPolicyRegistryABI from '../abis/DistributionPolicyRegistry.json';
 import TipDistributorABI from '../abis/TipDistributor.json';
 
-// Get these from env
-const REGISTRY_ADDRESS = import.meta.env.VITE_REGISTRY_ADDRESS as `0x${string}` || "0x0000000000000000000000000000000000000000";
-const DISTRIBUTOR_ADDRESS = import.meta.env.VITE_DISTRIBUTOR_ADDRESS as `0x${string}` || "0x0000000000000000000000000000000000000000";
+// Hardcoded for reliable Hackathon demo (Base Sepolia)
+const REGISTRY_ADDRESS = (import.meta.env.VITE_REGISTRY_ADDRESS || "0x81AeC0B87CAa631365B0AC0B628A84afdf6f1Fe9") as `0x${string}`;
+const DISTRIBUTOR_ADDRESS = (import.meta.env.VITE_DISTRIBUTOR_ADDRESS || "0xA9Eaf8E76966b60e9aB63C74a42605E84adF9EcE") as `0x${string}`;
 
 export function useTipCount() {
     return useReadContract({
