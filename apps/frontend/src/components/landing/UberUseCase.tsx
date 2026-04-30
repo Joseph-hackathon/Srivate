@@ -6,6 +6,7 @@ import { useCreateTip } from '@/hooks/useSrivateContracts';
 import { useAccount } from 'wagmi';
 import { api } from '@/lib/axios';
 import { toast } from 'sonner';
+import { ProtocolExecutionFlow } from './ProtocolExecutionFlow';
 
 export function UberUseCase() {
   const [mode, setMode] = useState<'rider' | 'driver'>('rider');
@@ -222,34 +223,20 @@ export function UberUseCase() {
                     )}
 
                     {tipState === 'processing' && (
-                      <div className="py-10 text-center flex flex-col items-center">
-                         <div className="w-8 h-8 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-4" />
-                         <p className="text-black font-bold">Processing on Base L2...</p>
+                      <div className="py-2 text-center flex flex-col items-center">
+                         <ProtocolExecutionFlow isComplete={false} lightMode={true} />
                       </div>
                     )}
 
                     {tipState === 'success' && (
-                      <div className="py-6 text-center flex flex-col items-center">
-                         <CheckCircle2 className="w-16 h-16 text-green-500 mb-4" />
-                         <h3 className="text-xl font-bold text-black mb-2">Tip Sent!</h3>
-                         <p className="text-sm text-gray-500 mb-6">Michael received 100% of your tip instantly via Srivate.</p>
-                         <div className="bg-gray-50 rounded-xl p-4 w-full text-left">
-                           <div className="flex justify-between mb-2">
-                             <span className="text-xs text-gray-500 font-medium">Tx Hash</span>
-                             {txHash ? (
-                               <a href={`https://sepolia.basescan.org/tx/${txHash}`} target="_blank" rel="noopener noreferrer" className="text-xs font-mono text-blue-500 font-bold hover:underline">
-                                 {`${txHash.slice(0, 6)}...${txHash.slice(-4)}`}
-                               </a>
-                             ) : (
-                               <span className="text-xs font-mono text-black font-medium">0x2a9...11b</span>
-                             )}
-                           </div>
-                           <div className="flex justify-between">
-                             <span className="text-xs text-gray-500 font-medium">Verified by</span>
-                             <span className="text-xs font-bold text-black flex items-center gap-1">0G Storage <Database className="w-3 h-3" /></span>
-                           </div>
+                      <div className="py-2 text-center flex flex-col items-center">
+                         <CheckCircle2 className="w-12 h-12 text-green-500 mb-2" />
+                         <h3 className="text-xl font-bold text-black mb-1">Tip Sent!</h3>
+                         <p className="text-sm text-gray-500 mb-4">Driver received 100% of your tip instantly via Srivate.</p>
+                         <div className="w-full mb-2">
+                           <ProtocolExecutionFlow isComplete={true} txHash={txHash} lightMode={true} />
                          </div>
-                         <button onClick={resetDemo} className="mt-6 text-sm font-bold text-black underline">Close</button>
+                         <button onClick={resetDemo} className="mt-4 text-sm font-bold text-black underline">Close</button>
                       </div>
                     )}
                   </motion.div>

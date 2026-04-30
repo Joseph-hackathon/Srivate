@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useCreateTip, usePolicyCount, useCreatePolicy } from '@/hooks/useSrivateContracts';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useMerchantStaffStats } from '@/hooks/useSrivateApi';
+import { ProtocolExecutionFlow } from './ProtocolExecutionFlow';
 
 const tipAmounts = [
   { value: 15, label: '15%' },
@@ -237,6 +238,7 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                      <button
                         onClick={() => setSelectedEmployee(null)}
+                        disabled={isLoading}
                         className={cn(
                           "whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-colors border",
                           selectedEmployee === null
@@ -250,6 +252,7 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
                         <button
                           key={staff.id}
                           onClick={() => setSelectedEmployee(staff.id)}
+                          disabled={isLoading}
                           className={cn(
                             "whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-colors border",
                             selectedEmployee === staff.id
@@ -262,32 +265,35 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
                      ))}
                    </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  {tipAmounts.map((tip) => {
-                    const amount = calculateTipAmount(tip.value);
-                    return (
-                      <button
-                        key={tip.value}
-                        onClick={() => handleSelectTip(tip.value)}
-                        disabled={isLoading}
-                        className={cn(
-                          "p-6 rounded-xl border transition-all duration-300 text-left group",
-                          selectedTip === tip.value
-                            ? "border-primary bg-primary/10"
-                            : "border-white/5 bg-white/[0.01] hover:border-white/10"
-                        )}
-                      >
-                        <div className="text-2xl font-bold text-white group-hover:text-primary transition-colors mb-1">
-                          {tip.label}
-                        </div>
-                        <div className="text-white/20 text-sm font-medium">
-                          ${amount.toFixed(2)}
-                        </div>
-                      </button>
-                    )
-                  })}
-                </div>
+                 {isLoading ? (
+                   <ProtocolExecutionFlow isComplete={false} />
+                 ) : (
+                   <div className="grid grid-cols-2 gap-4">
+                     {tipAmounts.map((tip) => {
+                       const amount = calculateTipAmount(tip.value);
+                       return (
+                         <button
+                           key={tip.value}
+                           onClick={() => handleSelectTip(tip.value)}
+                           disabled={isLoading}
+                           className={cn(
+                             "p-6 rounded-xl border transition-all duration-300 text-left group",
+                             selectedTip === tip.value
+                               ? "border-primary bg-primary/10"
+                               : "border-white/5 bg-white/[0.01] hover:border-white/10"
+                           )}
+                         >
+                           <div className="text-2xl font-bold text-white group-hover:text-primary transition-colors mb-1">
+                             {tip.label}
+                           </div>
+                           <div className="text-white/20 text-sm font-medium">
+                             ${amount.toFixed(2)}
+                           </div>
+                         </button>
+                       )
+                     })}
+                   </div>
+                 )}
 
                 <div className="pt-8 border-t border-white/5 flex justify-between items-center">
                   <div>
@@ -333,16 +339,9 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
                 <p className="text-base text-white/30 font-medium mb-6 max-w-xs">
                   The protocol has distributed USDC via Base L2.
                 </p>
-                {isTxSuccess && txHash && (
-                  <a 
-                    href={`https://sepolia.basescan.org/tx/${txHash}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors font-bold uppercase tracking-widest text-[10px] mb-10 bg-primary/5 px-4 py-2 rounded-lg border border-primary/20"
-                  >
-                    View on Explorer <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                )}
+                <div className="w-full max-w-md mb-8 text-left">
+                  <ProtocolExecutionFlow isComplete={true} txHash={txHash} />
+                </div>
                 <Button onClick={resetDemo} variant="outline" className="h-12 px-8 rounded-xl border-white/5 text-white hover:bg-white/5">
                   New Session
                 </Button>

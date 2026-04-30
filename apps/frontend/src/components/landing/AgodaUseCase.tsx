@@ -6,6 +6,7 @@ import { useCreateTip } from '@/hooks/useSrivateContracts';
 import { useAccount } from 'wagmi';
 import { api } from '@/lib/axios';
 import { toast } from 'sonner';
+import { ProtocolExecutionFlow } from './ProtocolExecutionFlow';
 
 export function AgodaUseCase() {
   const [tipState, setTipState] = useState<'rating' | 'tipping' | 'processing' | 'success'>('rating');
@@ -219,11 +220,9 @@ export function AgodaUseCase() {
                          key="processing"
                          initial={{ opacity: 0 }}
                          animate={{ opacity: 1 }}
-                         className="border border-gray-200 rounded-2xl p-8 text-center flex flex-col items-center"
+                         className="border border-gray-200 rounded-2xl p-2 text-center flex flex-col items-center"
                        >
-                          <div className="w-10 h-10 border-4 border-gray-100 border-t-[#5392F9] rounded-full animate-spin mb-4" />
-                          <p className="text-[#333] font-bold text-sm">Bypassing hotel management...</p>
-                          <p className="text-[10px] text-gray-400 mt-1">Executing smart contract on Base L2</p>
+                         <ProtocolExecutionFlow isComplete={false} lightMode={true} />
                        </motion.div>
                      )}
 
@@ -232,27 +231,14 @@ export function AgodaUseCase() {
                          key="success"
                          initial={{ opacity: 0 }}
                          animate={{ opacity: 1 }}
-                         className="border border-green-200 bg-green-50/50 rounded-2xl p-6 text-center flex flex-col items-center"
+                         className="border border-green-200 bg-green-50/50 rounded-2xl p-4 text-center flex flex-col items-center"
                        >
-                          <CheckCircle2 className="w-12 h-12 text-green-500 mb-3" />
+                          <CheckCircle2 className="w-10 h-10 text-green-500 mb-2" />
                           <h3 className="text-lg font-bold text-green-800 mb-1">Tip Delivered!</h3>
-                          <p className="text-xs text-green-600/80 mb-4">The staff member's wallet received ${selectedTip} instantly.</p>
+                          <p className="text-xs text-green-600/80 mb-3">The staff member's wallet received ${selectedTip} instantly.</p>
                           
-                          <div className="w-full bg-white rounded-lg p-3 text-left border border-green-100">
-                             <div className="flex justify-between items-center mb-1.5">
-                               <span className="text-[10px] font-bold text-gray-400 uppercase">Tx Hash</span>
-                               {txHash ? (
-                                 <a href={`https://sepolia.basescan.org/tx/${txHash}`} target="_blank" rel="noopener noreferrer" className="text-[10px] font-mono text-blue-500 font-bold hover:underline">
-                                   {`${txHash.slice(0, 6)}...${txHash.slice(-4)}`}
-                                 </a>
-                               ) : (
-                                 <span className="text-[10px] font-bold text-blue-600">Base L2</span>
-                               )}
-                             </div>
-                             <div className="flex justify-between items-center">
-                               <span className="text-[10px] font-bold text-gray-400 uppercase">Proof Log</span>
-                               <span className="text-[10px] font-bold text-primary flex items-center gap-1">0G Storage <Database className="w-3 h-3" /></span>
-                             </div>
+                          <div className="w-full mb-2">
+                             <ProtocolExecutionFlow isComplete={true} txHash={txHash} lightMode={true} />
                           </div>
                        </motion.div>
                      )}
