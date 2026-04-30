@@ -4,9 +4,10 @@ import DistributionPolicyRegistryABI from '../abis/DistributionPolicyRegistry.js
 import TipDistributorABI from '../abis/TipDistributor.json';
 
 // --- HARDCODED ADDRESSES FOR HACKATHON DEMO (BASE SEPOLIA) ---
-// Fallback to these addresses if env variables are missing or 0x0
-const REGISTRY_ADDRESS = (import.meta.env.VITE_REGISTRY_ADDRESS || "0x81AeC0B87CAa631365B0AC0B628A84afdf6f1Fe9") as `0x${string}`;
-const DISTRIBUTOR_ADDRESS = (import.meta.env.VITE_DISTRIBUTOR_ADDRESS || "0xA9Eaf8E76966b60e9aB63C74a42605E84adF9EcE") as `0x${string}`;
+// Registry: 0xb7C369CDfC0268735597095C8bDf2D29Cd05dD73
+// Distributor: 0x686E2f32E323D38200D37791A85d680C3A57BCF4
+const REGISTRY_ADDRESS = (import.meta.env.VITE_REGISTRY_ADDRESS || "0xb7C369CDfC0268735597095C8bDf2D29Cd05dD73") as `0x${string}`;
+const DISTRIBUTOR_ADDRESS = (import.meta.env.VITE_DISTRIBUTOR_ADDRESS || "0x686E2f32E323D38200D37791A85d680C3A57BCF4") as `0x${string}`;
 
 export function useTipCount() {
     return useReadContract({
