@@ -72,25 +72,8 @@ export const useMerchantStats = (idOrSlug: string) => {
     return useQuery({
         queryKey: ['merchant', idOrSlug, 'stats'],
         queryFn: async () => {
-            try {
-                const { data } = await api.get<{ data: MerchantStats }>(`/merchants/${idOrSlug}/stats`);
-                return data.data;
-            } catch (error) {
-                console.warn("Using mock stats data (backend unreachable)");
-                return {
-                    totalTipsToday: 245.50,
-                    totalTipsThisWeek: 1240.00,
-                    totalTipsAllTime: 8450.75,
-                    tipCountTotal: 432,
-                    percentChangeToday: 12.5,
-                    percentChangeWeek: 8.2,
-                    activeEmployees: 12,
-                    pendingPayouts: 345.50,
-                    pendingPayoutsCount: 4,
-                    paidPayouts: 8105.25,
-                    paidPayoutsCount: 428
-                } as MerchantStats;
-            }
+            const { data } = await api.get<{ data: MerchantStats }>(`/merchants/${idOrSlug}/stats`);
+            return data.data;
         },
         enabled: !!idOrSlug,
         refetchInterval: 10000,
@@ -101,17 +84,8 @@ export const useMerchantStaffStats = (idOrSlug: string) => {
     return useQuery({
         queryKey: ['merchant', idOrSlug, 'staff-stats'],
         queryFn: async () => {
-            try {
-                const { data } = await api.get<{ data: EmployeeWithStats[] }>(`/merchants/${idOrSlug}/staff-stats`);
-                return data.data;
-            } catch (error) {
-                console.warn("Using mock staff data (backend unreachable)");
-                return [
-                    { id: '1', name: 'Alice (Barista)', walletAddress: '0x123...abc', role: 'Staff', status: 'active', pendingAmount: 45.00, totalEarned: 1200, lastTxHash: '0x8f2a...1b9e' },
-                    { id: '2', name: 'Bob (Chef)', walletAddress: '0x456...def', role: 'Staff', status: 'active', pendingAmount: 0, totalEarned: 850, lastTxHash: '0x3c9d...4f2a' },
-                    { id: '3', name: 'Charlie (Waiter)', walletAddress: '0x789...ghi', role: 'Staff', status: 'active', pendingAmount: 12.50, totalEarned: 430, lastTxHash: '0x1e8b...9c3d' }
-                ] as EmployeeWithStats[];
-            }
+            const { data } = await api.get<{ data: EmployeeWithStats[] }>(`/merchants/${idOrSlug}/staff-stats`);
+            return data.data;
         },
         enabled: !!idOrSlug,
         refetchInterval: 5000,
