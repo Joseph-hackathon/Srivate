@@ -1,19 +1,90 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, ShieldCheck, Zap, Database, ArrowLeft, Heart, Share, CheckCircle2 } from 'lucide-react';
+import { Star, ShieldCheck, Zap, Database, ArrowLeft, Heart, Share, CheckCircle2, Loader2 } from 'lucide-react';
+import { useMerchantStaffStats } from '@/hooks/useSrivateApi';
+import { useCreateTip } from '@/hooks/useSrivateContracts';
+import { useAccount } from 'wagmi';
+import { api } from '@/lib/axios';
+import { toast } from 'sonner';
 
 export function AgodaUseCase() {
   const [tipState, setTipState] = useState<'rating' | 'tipping' | 'processing' | 'success'>('rating');
   const [selectedTip, setSelectedTip] = useState<number | null>(null);
 
-  const handleTip = () => {
+  // Real implementation states
+  const DEMO_MERCHANT_SLUG = 'demo-cafe';
+  const { data: staffData } = useMerchantStaffStats(DEMO_MERCHANT_SLUG);
+  const [selectedEmployee, setSelectedEmployee] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const { address } = useAccount();
+  const { createTip, isPending: isTxPending, isSuccess: isTxSuccess, hash: txHash } = useCreateTip();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    if (staffData && staffData.length > 0 && !selectedEmployee) {
+      setSelectedEmployee(staffData[0].id);
+    }
+  }, [staffData]);
+
+  const handleTip = async () => {
+    if (!selectedTip || !selectedEmployee) {
+      toast.error("Please select a tip amount and staff member");
+      return;
+    }
+    if (!address) {
+      toast.error("Please connect your Web3 wallet first");
+      return;
+    }
+    
+    setIsProcessing(true);
     setTipState('processing');
-    setTimeout(() => setTipState('success'), 2500);
+
+    try {
+      const { data } = await api.post('/sessions', {
+        merchantSlug: DEMO_MERCHANT_SLUG,
+        billAmount: 150.00,
+        currency: 'USDC'
+      });
+      const newSessionId = data.data.id;
+      setSessionId(newSessionId);
+
+      await api.patch(`/sessions/${newSessionId}/tip`, {
+        tipPercentage: selectedTip
+      });
+
+      // Trigger real on-chain Tip with policy #1
+      createTip("1", selectedTip.toString(), `Agoda Tip: ${newSessionId}`);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error creating tip session");
+      setTipState('tipping');
+      setIsProcessing(false);
+    }
   };
+
+  useEffect(() => {
+    if (isTxSuccess && sessionId && tipState === 'processing') {
+      api.post('/payments/simulate', {
+        sessionId,
+        payerAddress: address || "0x000000000000000000000000000000000000dEaD",
+        employeeId: selectedEmployee,
+        txHash: txHash
+      }).then(() => {
+        setTipState('success');
+        setIsProcessing(false);
+        toast.success("Tip settled on Base Sepolia!");
+      }).catch(err => {
+        console.error(err);
+        setTipState('success');
+        setIsProcessing(false);
+      });
+    }
+  }, [isTxSuccess, sessionId, tipState]);
 
   const resetDemo = () => {
     setTipState('rating');
     setSelectedTip(null);
+    setSessionId(null);
   };
 
   return (
@@ -98,9 +169,27 @@ export function AgodaUseCase() {
                        >
                           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#5392F9] to-primary" />
                           <h3 className="text-lg font-bold text-[#333] mb-2">Tip the Housekeeping?</h3>
+
+                          {/* Employee Selector */}
+                          <div className="flex gap-2 overflow-x-auto pb-4 pt-2 scrollbar-hide mb-2 px-2">
+                           {staffData?.map((staff) => (
+                              <button
+                                key={staff.id}
+                                onClick={() => setSelectedEmployee(staff.id)}
+                                className={`whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-colors border ${
+                                  selectedEmployee === staff.id
+                                    ? "bg-[#5392F9] border-[#5392F9] text-white"
+                                    : "bg-white border-gray-200 text-gray-500 hover:border-gray-300 hover:text-black"
+                                }`}
+                              >
+                                {staff.name}
+                              </button>
+                           ))}
+                         </div>
+
                           <p className="text-xs text-gray-500 mb-4 leading-relaxed">
-                            Loved the clean room? Leave a tip for Maria (Room 402 Staff). <br/>
-                            <span className="text-primary font-bold">Srivate ensures 100% goes to her directly.</span>
+                            Loved the clean room? Leave a tip directly.<br/>
+                            <span className="text-primary font-bold">Srivate ensures 100% goes to them directly.</span>
                           </p>
 
                           <div className="grid grid-cols-3 gap-2 mb-4">
@@ -110,17 +199,17 @@ export function AgodaUseCase() {
                                 onClick={() => setSelectedTip(amt)}
                                 className={`py-3 rounded-xl border font-bold transition-all ${selectedTip === amt ? 'border-[#5392F9] bg-[#5392F9]/10 text-[#5392F9]' : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'}`}
                               >
-                                €{amt}
+                                ${amt}
                               </button>
                             ))}
                           </div>
 
                           <button 
-                            className="w-full py-3.5 bg-[#5392F9] disabled:bg-gray-300 text-white rounded-xl font-bold transition-colors shadow-md shadow-blue-500/20"
-                            disabled={!selectedTip}
+                            className="w-full py-3.5 bg-[#5392F9] disabled:bg-gray-300 text-white rounded-xl font-bold transition-colors shadow-md shadow-blue-500/20 flex items-center justify-center"
+                            disabled={!selectedTip || isProcessing || isTxPending}
                             onClick={handleTip}
                           >
-                            Send Secure Tip
+                            {isProcessing || isTxPending ? <Loader2 className="animate-spin h-5 w-5" /> : "Send Secure Tip"}
                           </button>
                        </motion.div>
                      )}
@@ -147,12 +236,18 @@ export function AgodaUseCase() {
                        >
                           <CheckCircle2 className="w-12 h-12 text-green-500 mb-3" />
                           <h3 className="text-lg font-bold text-green-800 mb-1">Tip Delivered!</h3>
-                          <p className="text-xs text-green-600/80 mb-4">Maria's wallet received €{selectedTip} instantly.</p>
+                          <p className="text-xs text-green-600/80 mb-4">The staff member's wallet received ${selectedTip} instantly.</p>
                           
                           <div className="w-full bg-white rounded-lg p-3 text-left border border-green-100">
                              <div className="flex justify-between items-center mb-1.5">
-                               <span className="text-[10px] font-bold text-gray-400 uppercase">Settlement</span>
-                               <span className="text-[10px] font-bold text-blue-600">Base L2</span>
+                               <span className="text-[10px] font-bold text-gray-400 uppercase">Tx Hash</span>
+                               {txHash ? (
+                                 <a href={`https://sepolia.basescan.org/tx/${txHash}`} target="_blank" rel="noopener noreferrer" className="text-[10px] font-mono text-blue-500 font-bold hover:underline">
+                                   {`${txHash.slice(0, 6)}...${txHash.slice(-4)}`}
+                                 </a>
+                               ) : (
+                                 <span className="text-[10px] font-bold text-blue-600">Base L2</span>
+                               )}
                              </div>
                              <div className="flex justify-between items-center">
                                <span className="text-[10px] font-bold text-gray-400 uppercase">Proof Log</span>

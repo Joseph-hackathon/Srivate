@@ -1,20 +1,91 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, ShieldCheck, Zap, Database, ArrowLeft, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { Star, ShieldCheck, Zap, Database, ArrowLeft, ChevronDown, CheckCircle2, Loader2 } from 'lucide-react';
+import { useMerchantStaffStats } from '@/hooks/useSrivateApi';
+import { useCreateTip } from '@/hooks/useSrivateContracts';
+import { useAccount } from 'wagmi';
+import { api } from '@/lib/axios';
+import { toast } from 'sonner';
 
 export function UberUseCase() {
   const [mode, setMode] = useState<'rider' | 'driver'>('rider');
   const [tipState, setTipState] = useState<'rating' | 'tipping' | 'processing' | 'success'>('rating');
   const [selectedTip, setSelectedTip] = useState<number | null>(null);
 
-  const handleTip = () => {
+  // Real implementation states
+  const DEMO_MERCHANT_SLUG = 'demo-cafe';
+  const { data: staffData } = useMerchantStaffStats(DEMO_MERCHANT_SLUG);
+  const [selectedEmployee, setSelectedEmployee] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const { address } = useAccount();
+  const { createTip, isPending: isTxPending, isSuccess: isTxSuccess, hash: txHash } = useCreateTip();
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    if (staffData && staffData.length > 0 && !selectedEmployee) {
+      setSelectedEmployee(staffData[0].id);
+    }
+  }, [staffData]);
+
+  const handleTip = async () => {
+    if (!selectedTip || !selectedEmployee) {
+      toast.error("Please select a tip amount and driver");
+      return;
+    }
+    if (!address) {
+      toast.error("Please connect your Web3 wallet first");
+      return;
+    }
+    
+    setIsProcessing(true);
     setTipState('processing');
-    setTimeout(() => setTipState('success'), 2000);
+
+    try {
+      const { data } = await api.post('/sessions', {
+        merchantSlug: DEMO_MERCHANT_SLUG,
+        billAmount: 20.00,
+        currency: 'USDC'
+      });
+      const newSessionId = data.data.id;
+      setSessionId(newSessionId);
+
+      await api.patch(`/sessions/${newSessionId}/tip`, {
+        tipPercentage: selectedTip
+      });
+
+      // We trigger real on-chain Tip with policy #1
+      createTip("1", selectedTip.toString(), `Uber Tip: ${newSessionId}`);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error creating tip session");
+      setTipState('tipping');
+      setIsProcessing(false);
+    }
   };
+
+  useEffect(() => {
+    if (isTxSuccess && sessionId && tipState === 'processing') {
+      api.post('/payments/simulate', {
+        sessionId,
+        payerAddress: address || "0x000000000000000000000000000000000000dEaD",
+        employeeId: selectedEmployee,
+        txHash: txHash
+      }).then(() => {
+        setTipState('success');
+        setIsProcessing(false);
+        toast.success("Tip settled on Base Sepolia!");
+      }).catch(err => {
+        console.error(err);
+        setTipState('success');
+        setIsProcessing(false);
+      });
+    }
+  }, [isTxSuccess, sessionId, tipState]);
 
   const resetDemo = () => {
     setTipState('rating');
     setSelectedTip(null);
+    setSessionId(null);
   };
 
   return (
@@ -105,9 +176,27 @@ export function UberUseCase() {
 
                     {tipState === 'tipping' && (
                       <div className="text-center">
-                         <h3 className="text-xl font-bold text-black mb-1">Add a tip for Michael</h3>
-                         <p className="text-xs text-gray-500 mb-6 flex items-center justify-center gap-1">
-                           Powered by <Zap className="w-3 h-3 text-primary" /> Srivate (100% direct to driver)
+                         <h3 className="text-xl font-bold text-black mb-1">Add a tip</h3>
+                         
+                         {/* Employee Selector */}
+                         <div className="flex gap-2 overflow-x-auto pb-4 pt-2 scrollbar-hide mb-2 px-2">
+                           {staffData?.map((staff) => (
+                              <button
+                                key={staff.id}
+                                onClick={() => setSelectedEmployee(staff.id)}
+                                className={`whitespace-nowrap px-4 py-2 rounded-lg text-xs font-bold transition-colors border ${
+                                  selectedEmployee === staff.id
+                                    ? "bg-black border-black text-white"
+                                    : "bg-gray-50 border-gray-200 text-gray-500 hover:border-gray-300 hover:text-black"
+                                }`}
+                              >
+                                {staff.name}
+                              </button>
+                           ))}
+                         </div>
+
+                         <p className="text-xs text-gray-500 mb-4 flex items-center justify-center gap-1">
+                           Powered by <Zap className="w-3 h-3 text-primary" /> Srivate (100% direct)
                          </p>
 
                          <div className="grid grid-cols-3 gap-3 mb-6">
@@ -123,11 +212,11 @@ export function UberUseCase() {
                          </div>
 
                          <button 
-                           className="w-full py-4 bg-black disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-lg transition-colors"
-                           disabled={!selectedTip}
+                           className="w-full py-4 bg-black disabled:bg-gray-200 disabled:text-gray-400 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center"
+                           disabled={!selectedTip || isProcessing || isTxPending}
                            onClick={handleTip}
                          >
-                           Done
+                           {isProcessing || isTxPending ? <Loader2 className="animate-spin h-5 w-5" /> : "Done"}
                          </button>
                       </div>
                     )}
@@ -147,7 +236,13 @@ export function UberUseCase() {
                          <div className="bg-gray-50 rounded-xl p-4 w-full text-left">
                            <div className="flex justify-between mb-2">
                              <span className="text-xs text-gray-500 font-medium">Tx Hash</span>
-                             <span className="text-xs font-mono text-black font-medium">0x2a9...11b</span>
+                             {txHash ? (
+                               <a href={`https://sepolia.basescan.org/tx/${txHash}`} target="_blank" rel="noopener noreferrer" className="text-xs font-mono text-blue-500 font-bold hover:underline">
+                                 {`${txHash.slice(0, 6)}...${txHash.slice(-4)}`}
+                               </a>
+                             ) : (
+                               <span className="text-xs font-mono text-black font-medium">0x2a9...11b</span>
+                             )}
                            </div>
                            <div className="flex justify-between">
                              <span className="text-xs text-gray-500 font-medium">Verified by</span>

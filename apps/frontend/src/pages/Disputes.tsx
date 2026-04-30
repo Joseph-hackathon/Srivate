@@ -61,7 +61,7 @@ export default function Disputes() {
         : tip.status === 'pending'
         ? 'Transaction is currently awaiting confirmation.'
         : 'Transaction processed and settled successfully on Base Sepolia.',
-    amount: tip.totalAmount,
+    amount: tip.totalAmount || tip.amount || 0,
     currency: 'USDC',
     status: tip.status === 'failed' ? 'open' : (tip.status === 'pending' ? 'pending' : 'resolved'),
     createdAt: new Date(tip.createdAt).toLocaleString(),
