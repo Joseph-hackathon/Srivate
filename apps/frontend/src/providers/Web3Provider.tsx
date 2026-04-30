@@ -5,7 +5,7 @@ import {
   darkTheme,
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
-import { cronosTestnet } from 'wagmi/chains';
+import { baseSepolia } from 'wagmi/chains';
 import {
   QueryClientProvider,
   QueryClient,
@@ -15,7 +15,7 @@ import { ReactNode } from 'react';
 const config = getDefaultConfig({
   appName: 'Srivate Protocol',
   projectId: 'YOUR_PROJECT_ID', // Get one at https://cloud.walletconnect.com
-  chains: [cronosTestnet],
+  chains: [baseSepolia],
   ssr: true, // If your dApp uses server side rendering (SSR)
 });
 
