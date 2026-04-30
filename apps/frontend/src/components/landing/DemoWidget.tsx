@@ -73,11 +73,11 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
       toast.error("Please connect your wallet");
       return;
     }
-    // Create a demo policy: 50/50 split between manager and a demo address
+    // Create a demo policy: 50/50 split between manager and a demo address (basis points: 5000 = 50%)
     createPolicy(
       "Demo Cafe Policy", 
       [account.address, "0x0000000000000000000000000000000000000000"], 
-      [50, 50]
+      [5000, 5000]
     );
   };
 
@@ -97,7 +97,7 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
       return;
     }
 
-    if (policyCount === BigInt(0)) {
+    if (policyCount === undefined || policyCount === BigInt(0)) {
        toast.error("Protocol not initialized. Please click the 'Initialize Protocol' button.");
        return;
     }
@@ -296,7 +296,7 @@ export function DemoWidget({ isEmbedded = false }: { isEmbedded?: boolean }) {
                     </p>
                   </div>
                   <div className="flex gap-3">
-                    {policyCount === BigInt(0) ? (
+                    {policyCount === undefined || policyCount === BigInt(0) ? (
                       <Button
                         className="h-14 px-8 bg-secondary hover:bg-secondary/80 text-white font-bold uppercase tracking-widest text-[10px]"
                         onClick={handleInitPolicy}
