@@ -9,7 +9,7 @@ import {
     simulatePayment,
     verifyPayment
 } from "../services";
-import { getFacilitator } from "../config/thirdweb";
+import { getFacilitator } from "../config/paymentConfig";
 import { getChainConfig } from "../config/chains";
 
 const router = Router();

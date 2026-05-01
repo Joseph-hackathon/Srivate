@@ -7,7 +7,7 @@ import {
 } from "../types";
 import { MerchantRepository, SessionRepository, TransactionRepository } from "../db/models";
 import { getDatabase } from "../db";
-import { createPaymentRequirements, getFacilitator } from "../config/thirdweb";
+import { createPaymentRequirements, getFacilitator } from "../config/paymentConfig";
 import { getChainConfig } from "../config/chains";
 import { recordTipAllocations, processHackathonExtensions } from "./tipSplitService";
 import { executeSettlement } from "./keeperHubService";

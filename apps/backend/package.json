@@ -26,7 +26,6 @@
     "solc": "^0.8.20",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "thirdweb": "^5.116.1",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

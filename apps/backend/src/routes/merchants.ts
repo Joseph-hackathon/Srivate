@@ -15,7 +15,7 @@ import {
     TransactionRepository
 } from "../db/models";
 import { Router } from "express";
-import { ContractService } from "../services";
+
 
 const router = Router();
 
@@ -522,13 +522,9 @@ router.put("/:id/split-config", async (request, response) => {
 
         // Sync with Web3 if possible
         try {
-            const { recipients, percentages } = ContractService.preparePolicyData(
-                updatedConfig.splits,
-                merchant.walletAddress
-            );
-
-            // This invokes the Web3 contract to create/update the distribution policy
-            const onChainPolicyId = await ContractService.syncPolicyOnChain(recipients, percentages);
+            // ContractService has been removed. Simulating on-chain sync for demo purposes:
+            const onChainPolicyId = Math.floor(Math.random() * 1000) + 1;
+            console.log(`[Mock] On-chain policy created with ID: ${onChainPolicyId}`);
 
             // Store the on-chain reference
             MerchantRepository.updateOnChainPolicyId(merchant.id, onChainPolicyId);
