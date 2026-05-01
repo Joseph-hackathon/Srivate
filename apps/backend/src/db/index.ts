@@ -25,7 +25,7 @@ export function getDatabase(): Database.Database {
  * @return {Database.Database} A reference to the initialized and seeded database instance.
  */
 function seedDatabase(): Database.Database {
-    const dbPath = process.env.DATABASE_PATH || "./data/weep.db";
+    const dbPath = process.env.DATABASE_PATH || "./data/srivate.db";
     const dbDirectory = path.dirname(dbPath);
 
     // checking if the directory exists
@@ -360,6 +360,7 @@ function createTransactionTable(db: Database.Database): void {
             tx_hash           TEXT NOT NULL,
             network_id        TEXT NOT NULL,
             on_chain_policy_id INTEGER,
+            zero_g_data_root  TEXT,
             status            TEXT NOT NULL DEFAULT 'pending',
             created_at        TEXT NOT NULL,
             confirmed_at      TEXT,
@@ -488,6 +489,13 @@ function migrateSchema(db: Database.Database): void {
         if (!hasEmployeeId) {
             console.log("Migrating schema: Adding employee_id to tip_splits");
             db.prepare("ALTER TABLE tip_splits ADD COLUMN employee_id TEXT").run();
+        }
+
+        // Check for zero_g_data_root in transactions
+        const hasZeroG = txColumns.some(c => c.name === 'zero_g_data_root');
+        if (!hasZeroG) {
+            console.log("Migrating schema: Adding zero_g_data_root to transactions");
+            db.prepare("ALTER TABLE transactions ADD COLUMN zero_g_data_root TEXT").run();
         }
     } catch (error) {
         console.error("Schema migration failed:", error);

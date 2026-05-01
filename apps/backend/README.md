@@ -1,13 +1,13 @@
-# Weep Backend Documentation
+# Srivate Backend Documentation
 
-Welcome to the Weep Backend documentation. This document is intended for frontend developers and other team members setting up or integrating with the Weep Protocol backend.
+Welcome to the Srivate Backend documentation. This document is intended for frontend developers and other team members setting up or integrating with the Srivate Protocol backend.
 
 ## Overview
 
-The Weep Backend is an AI-native micro-tipping platform built on the Cronos blockchain. It facilitates payments using the x402 protocol and Thirdweb SDK.
+The Srivate Backend is an AI-native micro-tipping platform built on the Base blockchain. It facilitates payments using the x402 protocol and KeeperHub Execution Layer.
 
 - **Stack**: Node.js, Express, TypeScript
-- **Blockchain**: Cronos (Mainnet/Testnet)
+- **Blockchain**: Base (Mainnet/Sepolia)
 - **Payments**: USDC (6 decimals)
 - **Database**: SQLite (Local development) / PostgreSQL (Production ready)
 
@@ -19,7 +19,7 @@ Before setting up the backend, ensure you have the following:
 
 - **Node.js** (v18 or higher)
 - **NPM** or **Yarn**
-- **Thirdweb Account**: You'll need a [Thirdweb Secret Key](https://thirdweb.com/dashboard/settings/api-keys).
+- **KeeperHub Account**: You'll need a [KeeperHub API Key](https://app.keeperhub.com/).
 - **Wallet**: A server wallet address to act as a facilitator.
 
 ---
@@ -33,15 +33,15 @@ PORT=3001
 FRONTEND_URL=http://localhost:3000
 
 # Blockchain Configuration
-# 338 for Cronos Testnet, 25 for Cronos Mainnet
-CHAIN_ID=338
+# 84532 for Base Sepolia, 8453 for Base Mainnet
+CHAIN_ID=84532
 
-# Thirdweb Configuration
-THIRDWEB_SECRET_KEY=your_thirdweb_secret_key
+# KeeperHub Configuration
+KEEPERHUB_API_KEY=your_keeperhub_api_key
 SERVER_WALLET_ADDRESS=your_facilitator_wallet_address
 
 # Database (Optional, defaults to SQLite)
-# DATABASE_URL=postgresql://user:password@localhost:5432/weep
+# DATABASE_URL=postgresql://user:password@localhost:5432/srivate
 ```
 
 ---
@@ -68,14 +68,14 @@ SERVER_WALLET_ADDRESS=your_facilitator_wallet_address
 
 ---
 
-## Cronos & USDC Configuration
+## Base & USDC Configuration
 
-The backend supports Cronos Mainnet and Testnet. The configuration is automatically selected based on the `CHAIN_ID` environment variable.
+The backend supports Base Mainnet and Sepolia. The configuration is automatically selected based on the `CHAIN_ID` environment variable.
 
 | Network | Chain ID | USDC Address | Explorer |
 | :--- | :--- | :--- | :--- |
-| **Cronos Mainnet** | 25 | `0xc21223249CA28397B4B6541dfFaEcC539BfF0c59` | [Explorer](https://explorer.cronos.org/) |
-| **Cronos Testnet** | 338 | `0x7C8cf427BB01246843bDED21B71BeF343a824712` | [Testnet Explorer](https://explorer.cronos.org/testnet) |
+| **Base Mainnet** | 8453 | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` | [Explorer](https://basescan.org/) |
+| **Base Sepolia** | 84532 | `0x036CbD53842c5426634e7929541eC2318f3dCF7e` | [Sepolia Explorer](https://sepolia.basescan.org/) |
 
 ---
 
@@ -110,5 +110,5 @@ The backend uses a three-step payment process:
 2. **Verify**: `POST /api/payments/verify` (optional client-side check).
 3. **Settle**: `POST /api/payments/settle` (finalizes transaction on-chain).
 
-### 4. Cronos Setup
-Ensure the frontend is configured to use the same `CHAIN_ID` as the backend. Use Thirdweb's `Cronos` or `CronosTestnet` chain objects.
+### 4. Base Setup
+Ensure the frontend is configured to use the same `CHAIN_ID` as the backend. 

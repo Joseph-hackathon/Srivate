@@ -39,7 +39,7 @@ function verifyWebhookSignature(
  *     tags: [Webhooks]
  *     parameters:
  *       - in: header
- *         name: x-weep-signature
+ *         name: x-srivate-signature
  *         schema:
  *           type: string
  *         description: Signature for payload verification
@@ -78,7 +78,7 @@ function verifyWebhookSignature(
  * @route POST /api/webhooks/payment
  * @desc Webhook endpoint for processing payment events (confirmed, failed)
  * @access Public
- * @header {string} [x-weep-signature] - Signature for payload verification
+ * @header {string} [x-srivate-signature] - Signature for payload verification
  * @body {string} event - The type of event (e.g., 'payment.confirmed', 'payment.failed')
  * @body {object} data - Event-specific data payload
  * @body {string} data.sessionId - The ID of the affected session
@@ -91,7 +91,7 @@ function verifyWebhookSignature(
  *   method: 'POST',
  *   headers: {
  *     'Content-Type': 'application/json',
- *     'x-weep-signature': '...'
+ *     'x-srivate-signature': '...'
  *   },
  *   body: JSON.stringify({
  *     event: 'payment.confirmed',
@@ -106,7 +106,7 @@ function verifyWebhookSignature(
  */
 router.post("/payment", (request, response) => {
     try {
-        const signature = request.headers["x-weep-signature"] as string;
+        const signature = request.headers["x-srivate-signature"] as string;
         const webhookSecret = process.env.WEBHOOK_SECRET;
 
         // Verify signature if secret is configured
@@ -265,7 +265,7 @@ export async function sendWebhook(
         };
 
         if (secret) {
-            headers["x-weep-signature"] = generateWebhookSignature(payload, secret);
+            headers["x-srivate-signature"] = generateWebhookSignature(payload, secret);
         }
 
         const response = await fetch(url, {

@@ -6,9 +6,9 @@ const options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'Weep Protocol API',
+            title: 'Srivate Protocol API',
             version: '1.0.0',
-            description: 'AI-native micro-tipping backend with x402 + Thirdweb on Cronos',
+            description: 'AI-native micro-tipping backend with x402 + KeeperHub on Base',
         },
         components: {
             schemas: {

@@ -762,6 +762,7 @@ export const TransactionRepository = {
         txHash: string;
         networkId: string;
         onChainPolicyId?: number;
+        zeroGDataRoot?: string;
     }): Transaction {
         const db = getDatabase();
         const now = new Date().toISOString();
@@ -771,8 +772,8 @@ export const TransactionRepository = {
             `
                 INSERT INTO transactions (id, session_id, merchant_id, payer_address, recipient_address,
                                           bill_amount, tip_amount, total_amount, currency, tx_hash, network_id, 
-                                          on_chain_policy_id, status, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                          on_chain_policy_id, zero_g_data_root, status, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `
         ).run(
             id,
@@ -787,9 +788,23 @@ export const TransactionRepository = {
             data.txHash,
             data.networkId,
             data.onChainPolicyId || null,
+            data.zeroGDataRoot || null,
             "pending",
             now
         );
+
+        return this.findById(id)!;
+    },
+
+    updateZeroGDataRoot(id: string, dataRoot: string): Transaction {
+        const db = getDatabase();
+        db.prepare(
+            `
+                UPDATE transactions
+                SET zero_g_data_root = ?
+                WHERE id = ?
+            `
+        ).run(dataRoot, id);
 
         return this.findById(id)!;
     },

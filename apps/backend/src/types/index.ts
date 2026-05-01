@@ -237,6 +237,7 @@ export interface Transaction {
     txHash: string;
     networkId: string;
     onChainPolicyId?: number;
+    zeroGDataRoot?: string;
     status: TransactionStatus;
     createdAt: string;
     confirmedAt?: string;

@@ -114,6 +114,7 @@ export function mapTransaction(row: Record<string, unknown>): Transaction {
         txHash: row.tx_hash as string,
         networkId: row.network_id as string,
         onChainPolicyId: row.on_chain_policy_id !== null ? (row.on_chain_policy_id as number) : undefined,
+        zeroGDataRoot: (row.zero_g_data_root as string) || undefined,
         status: row.status as TransactionStatus,
         createdAt: row.created_at as string,
         confirmedAt: (row.confirmed_at as string) || undefined,

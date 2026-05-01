@@ -171,7 +171,7 @@ export async function settlePayment(
         const result = await executeSettlement(
             merchant.walletAddress,
             session.totalAmount!.toString(),
-            session.currency || "USDC",
+            getChainConfig().usdc,
             process.env.CHAIN_ID === "84532" ? "base-sepolia" : "base-sepolia" 
         );
 

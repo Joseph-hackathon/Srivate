@@ -132,8 +132,10 @@ export async function processHackathonExtensions(
         };
 
         const uploadResult = await uploadTipProof(proofData);
-        if (uploadResult.success) {
+        if (uploadResult.success && uploadResult.dataRoot) {
             console.log(`[Extension] 0G DataRoot: ${uploadResult.dataRoot}`);
+            // Save to DB for real persistence and transparency
+            TransactionRepository.updateZeroGDataRoot(transactionId, uploadResult.dataRoot);
         }
     } catch (error: any) {
         console.error("[Extension] Failed:", error.message);
