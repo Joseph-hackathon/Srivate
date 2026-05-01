@@ -5,7 +5,7 @@ const { ethers } = require('ethers');
 
 // Base Sepolia config
 const RPC_URL = 'https://sepolia.base.org';
-const PRIVATE_KEY = 'bb3e5f51dad7216718306f64830c862e78b83d50c1683d3dd25c603b0b270679';
+const PRIVATE_KEY = process.env.MANAGER_PRIVATE_KEY || 'REPLACE_WITH_NEW_PRIVATE_KEY_HERE';
 
 async function deploy() {
     console.log("Compiling contracts...");
