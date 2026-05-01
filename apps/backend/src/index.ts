@@ -12,7 +12,6 @@ import disputeRoutes from './routes/disputes';
 import receiptRoutes from './routes/receipts';
 import embedRoutes from './routes/embed';
 import paymentRoutes from './routes/payments';
-import { blockchainRouter } from './routes/blockchain';
 import { getChainConfig } from "./config/chains";
 import { swaggerUi, specs } from "./swagger";
 
@@ -22,9 +21,23 @@ const dbPath = process.env.DATABASE_PATH || "./data/srivate.db";
 
 // Security middleware
 app.use(helmet());
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:4173',
+  'https://srivate.vercel.app',
+  'https://srivate-production.up.railway.app'
+];
+
 app.use(
     cors({
-        origin: true,
+        origin: function (origin, callback) {
+            // Allow requests with no origin (like mobile apps or curl requests)
+            if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         credentials: true,
     })
 );
@@ -75,7 +88,6 @@ app.use("/api/disputes", disputeRoutes);
 app.use("/api/receipts", receiptRoutes);
 app.use("/api/embed", embedRoutes);
 app.use("/api/webhooks", webhookRoutes);
-app.use("/api/blockchain", blockchainRouter);
 
 
 // Root endpoint
@@ -94,8 +106,7 @@ app.get("/", (_req, res) => {
             receipts: "/api/receipts",
             disputes: "/api/disputes",
             webhooks: "/api/webhooks",
-            embed: "/api/embed",
-            blockchain: "/api/blockchain"
+            embed: "/api/embed"
         },
     });
 });
