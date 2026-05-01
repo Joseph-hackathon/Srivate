@@ -28,6 +28,21 @@ export function createPaymentRequirements(
 }
 
 export class MockFacilitator {
+    async supported(options?: any): Promise<any> {
+        return {
+            schemes: ["exact"],
+            networks: ["base-sepolia"],
+            tokens: [
+                {
+                    address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+                    symbol: "USDC",
+                    decimals: 6,
+                    chainId: 84532,
+                },
+            ]
+        };
+    }
+    
     async verify(paymentPayload: string, _paymentRequirements: object): Promise<{ isValid: boolean; invalidReason?: string }> {
         return { isValid: true };
     }
