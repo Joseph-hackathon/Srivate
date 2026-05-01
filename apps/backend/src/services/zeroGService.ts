@@ -33,11 +33,15 @@ export async function uploadTipProof(data: any): Promise<{ success: boolean; dat
         const memData = new MemData(encodedData);
 
         // Actual Upload
-        const [rootHash, uploadErr] = await indexer.upload(memData, ZEROG_RPC_URL, signer);
+        const [uploadResult, uploadErr] = await indexer.upload(memData, ZEROG_RPC_URL, signer);
         
         if (uploadErr) {
             throw uploadErr;
         }
+
+        // Extract rootHash string from the result object
+        const rootHash = 'rootHash' in uploadResult ? uploadResult.rootHash : 
+                        ('rootHashes' in uploadResult ? uploadResult.rootHashes[0] : JSON.stringify(uploadResult));
 
         console.log(`[0G] Proof archived successfully at ${rootHash}`);
         

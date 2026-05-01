@@ -1,4 +1,4 @@
-import {TipAllocationRepository, TipSplitRepository, MerchantRepository} from "../db/models";
+import {TipAllocationRepository, TipSplitRepository, MerchantRepository, TransactionRepository} from "../db/models";
 import {TipSplit} from "../types";
 import { executeAutoSwap } from "./uniswapService";
 import { uploadTipProof } from "./zeroGService";
