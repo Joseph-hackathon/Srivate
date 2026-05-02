@@ -100,7 +100,8 @@ export function useClaim() {
             address: DISTRIBUTOR_ADDRESS,
             abi: TipDistributorABI.abi,
             functionName: "claim",
-            args: [token]
+            args: [token],
+            gas: BigInt(500000), // Manually set gas limit to avoid RPC "exceeds max gas" error on revert
         });
     }
 

@@ -103,6 +103,15 @@ export function EmployeePortal({ walletAddress }: EmployeePortalProps) {
     }
   }, [isClaimSuccess, txHash]);
 
+  useEffect(() => {
+    if (error) {
+      console.error("Claim error:", error);
+      toast.error("Claim failed", {
+        description: "Your on-chain balance might be zero or the network is congested. Please try again later."
+      });
+    }
+  }, [error]);
+
   const handleClaim = () => {
     if (currentEmployee.pendingAmount <= 0) {
       toast.error("No funds available to claim");
