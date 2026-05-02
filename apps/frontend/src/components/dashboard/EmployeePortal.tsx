@@ -85,7 +85,7 @@ export function EmployeePortal({ walletAddress }: EmployeePortalProps) {
     );
   }
 
-  const { claim, isPending: isClaimPending, isSuccess: isClaimSuccess, hash: txHash } = useClaim();
+  const { claim, isPending: isClaimPending, isSuccess: isClaimSuccess, hash: txHash, error: claimError } = useClaim();
   const claimBackendMutation = useClaimEmployeeFunds();
 
   useEffect(() => {
@@ -104,13 +104,13 @@ export function EmployeePortal({ walletAddress }: EmployeePortalProps) {
   }, [isClaimSuccess, txHash]);
 
   useEffect(() => {
-    if (error) {
-      console.error("Claim error:", error);
+    if (claimError) {
+      console.error("Claim error:", claimError);
       toast.error("Claim failed", {
         description: "Your on-chain balance might be zero or the network is congested. Please try again later."
       });
     }
-  }, [error]);
+  }, [claimError]);
 
   const handleClaim = () => {
     if (currentEmployee.pendingAmount <= 0) {
