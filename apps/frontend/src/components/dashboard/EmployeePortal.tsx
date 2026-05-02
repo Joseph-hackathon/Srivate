@@ -16,7 +16,7 @@ import { cn } from '@/lib/utils';
 import { useClaim } from '@/hooks/useSrivateContracts';
 import { Loader2, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 interface EmployeePortalProps {
   walletAddress?: string;
@@ -28,10 +28,10 @@ const DEMO_MERCHANT_SLUG = 'demo-cafe';
 export function EmployeePortal({ walletAddress }: EmployeePortalProps) {
   const { data: staffList, isLoading: isStaffLoading } = useMerchantStaffStats(DEMO_MERCHANT_SLUG);
 
-  // Find current employee based on connected wallet
-  const currentEmployee = staffList?.find(
+  // Find current employee based on connected wallet - Memoized to prevent unnecessary re-renders
+  const currentEmployee = useMemo(() => staffList?.find(
     e => e.walletAddress.toLowerCase() === walletAddress?.toLowerCase()
-  );
+  ), [staffList, walletAddress]);
 
   const { data: payouts, isLoading: isPayoutsLoading } = useEmployeePayouts(
     DEMO_MERCHANT_SLUG,
@@ -88,8 +88,12 @@ export function EmployeePortal({ walletAddress }: EmployeePortalProps) {
   const { claim, isPending: isClaimPending, isSuccess: isClaimSuccess, hash: txHash, error: claimError } = useClaim();
   const claimBackendMutation = useClaimEmployeeFunds();
 
+  const processedTxRef = useRef<string | null>(null);
+  const lastErrorRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (isClaimSuccess && txHash) {
+    if (isClaimSuccess && txHash && processedTxRef.current !== txHash) {
+      processedTxRef.current = txHash; // Mark as processed
       if (currentEmployee) {
         claimBackendMutation.mutate({ merchantSlug: DEMO_MERCHANT_SLUG, employeeId: currentEmployee.id });
       }
@@ -101,10 +105,12 @@ export function EmployeePortal({ walletAddress }: EmployeePortalProps) {
         }
       });
     }
-  }, [isClaimSuccess, txHash]);
+  }, [isClaimSuccess, txHash, currentEmployee, claimBackendMutation]);
 
   useEffect(() => {
-    if (claimError) {
+    const errorMsg = claimError?.message || null;
+    if (claimError && lastErrorRef.current !== errorMsg) {
+      lastErrorRef.current = errorMsg;
       console.error("Claim error:", claimError);
       toast.error("Claim failed", {
         description: "Your on-chain balance might be zero or the network is congested. Please try again later."
