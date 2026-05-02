@@ -117,9 +117,24 @@ export function EmployeePortal({ walletAddress }: EmployeePortalProps) {
       toast.error("No funds available to claim");
       return;
     }
+    
+    toast.info("Initiating settlement on Base Sepolia...", {
+      description: "Please confirm the transaction in your wallet."
+    });
+
     // Claim native ETH
     claim("0x0000000000000000000000000000000000000000");
   };
+
+  useEffect(() => {
+    if (txHash) {
+      console.log("[Srivate] Transaction Hash generated:", txHash);
+    }
+  }, [txHash]);
+
+  useEffect(() => {
+    console.log("[Srivate] Claim Status - Pending:", isClaimPending, "Success:", isClaimSuccess);
+  }, [isClaimPending, isClaimSuccess]);
 
   return (
     <div className="space-y-8">

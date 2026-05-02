@@ -93,6 +93,7 @@ export function useClaim() {
 
     const { isLoading: isWaiting, isSuccess } = useWaitForTransactionReceipt({
         hash,
+        confirmations: 1,
     });
 
     const claim = (token: `0x${string}` = "0x0000000000000000000000000000000000000000") => {
@@ -101,7 +102,7 @@ export function useClaim() {
             abi: TipDistributorABI.abi,
             functionName: "claim",
             args: [token],
-            gas: BigInt(500000), // Manually set gas limit to avoid RPC "exceeds max gas" error on revert
+            gas: BigInt(800000), // Increased gas limit to ensure success on Base Sepolia
         });
     }
 
